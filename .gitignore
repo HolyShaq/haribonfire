@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+.next/
+out/
+*.log
+*.env
+
+# Next.js
+.next/
+
+# Python
+__pycache__/
+env/
+venv/
+*.env
+
+# FastAPI
+*.sqlite3
+*.db
+*.log
+
+# PostgreSQL
+pgdata/
+
+# Docker
+*.dockerignore
+
+# Log files
+*.log
