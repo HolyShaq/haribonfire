@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Enum, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.orm.base import state_str
 from sqlalchemy.orm.properties import ForeignKey
+
+from database.models.messages import Message
 
 from ..core.enums import Status
 from ..db import Base
@@ -57,7 +58,7 @@ class ReportedUser(Base):
 
     reporter_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
     reported_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    reported_message_id: Mapped[str]  # TODO: connect to message table
+    reported_message_id: Mapped[int] = mapped_column(ForeignKey("messages.id"), primary_key=True)
     reason: Mapped[str]
     status: Mapped[Status] = mapped_column(
         Enum(Status, create_constraint=True, validate_strings=True)
@@ -66,3 +67,4 @@ class ReportedUser(Base):
     # Relationships
     reporter: Mapped[User] = relationship(foreign_keys=[reporter_id])
     reported: Mapped[User] = relationship(foreign_keys=[reported_id])
+    message: Mapped[Message] = relationship(foreign_keys=[reported_message_id])
