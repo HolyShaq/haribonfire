@@ -11,8 +11,9 @@ Session = sessionmaker(engine)
 
 
 def get_database_session():
-    with Session().begin() as session:
+    with Session() as session:
         yield session
+        session.commit()
 
 
 # Define a base class for declarative models

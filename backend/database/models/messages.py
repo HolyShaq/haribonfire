@@ -8,6 +8,8 @@ from sqlalchemy.types import DateTime as DateTimeType
 
 from database.core.enums import ChatRoomStatus, ChatRoomType
 
+from ..models import *
+
 from ..db import Base
 
 
@@ -43,6 +45,9 @@ class Message(Base):
     # Relationship
     chat_room: Mapped[ChatRoom] = relationship(back_populates="messages")
 
+    def __repr__(self):
+        return f"Message(id={self.id}, message={self.message}, sender_id={self.sender_id}, receiver_id={self.receiver_id}, sent_at={self.sent_at})"
+
 class GlobalMessage(Base):
     __tablename__ = "global_messages"
 
@@ -52,3 +57,6 @@ class GlobalMessage(Base):
     sent_at: Mapped[DateTimeType] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+
+    def __repr__(self):
+        return f"GlobalMessage(id={self.id}, message={self.message}, sender_id={self.sender_id}, sent_at={self.sent_at})"

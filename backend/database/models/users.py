@@ -2,9 +2,8 @@ from sqlalchemy import Column, Enum, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm.properties import ForeignKey
 
-from database.models.messages import Message
-
 from ..core.enums import Status
+from ..models import *
 from ..db import Base
 
 
@@ -67,4 +66,4 @@ class ReportedUser(Base):
     # Relationships
     reporter: Mapped[User] = relationship(foreign_keys=[reporter_id])
     reported: Mapped[User] = relationship(foreign_keys=[reported_id])
-    message: Mapped[Message] = relationship(foreign_keys=[reported_message_id])
+    message: Mapped["Message"] = relationship(foreign_keys=[reported_message_id])
