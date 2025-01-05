@@ -1,8 +1,21 @@
+from contextlib import asynccontextmanager
 from typing import Union
 
 from fastapi import FastAPI
 
-app = FastAPI()
+from database.db import Session, initialize_database
+from database.models.users import User
+
+
+# Define lifespan of the api
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    initialize_database()
+    yield
+
+
+# Initialize the api
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
