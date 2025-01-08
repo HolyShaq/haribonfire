@@ -1,28 +1,43 @@
-from fastapi import APIRouter, WebSocketDisconnect, WebSocket
+from typing import Type
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-router = APIRouter()
 
-@router.websocket("/ws/global/")
-async def lab_socket(websocket: WebSocket):
+def websocket(router: APIRouter, path: str):
+    def decorator(cls: Type[WebsocketBase]):
 
-    async def on_connect():
-        print("Connected")
-        await websocket.accept()
+        @router.websocket(path)
+        async def wrapper(websocket: WebSocket):
+            instance = cls(websocket)
+            await instance.handle()
 
-    async def on_receive(data):
-        # websocket receive event
-        print(f"Received: {data}")
-        await websocket.send_text(f"Message text was: {data}")
+        return wrapper
 
-    async def on_disconnect():
-        # websocket diconnect event
-        print("Disconnected")
+    return decorator
+
+
+class WebsocketBase:
+    def __init__(self, websocket: WebSocket):
+        self.websocket = websocket
+
+    async def on_connect(self):
         pass
 
-    try:
-        await on_connect()
-        while True:
-            data = await websocket.receive_text()
-            await on_receive(data)
-    except WebSocketDisconnect:
-        await on_disconnect()
+    async def on_receive(self, data):
+        pass
+
+    async def on_disconnect(self):
+        pass
+
+    async def handle(self):
+        # Handle connect event
+        await self.on_connect()
+        try:
+
+            # Handle on receive events
+            while True:
+                data = await self.websocket.receive_text()
+                await self.on_receive(data)
+
+        # Handle disconnect event
+        except WebSocketDisconnect:
+            await self.on_disconnect()

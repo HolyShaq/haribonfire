@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from database.db import initialize_database
-from endpoints import messages, ws
+from endpoints import messages
 
 
 # Define lifespan of the api
@@ -18,4 +18,3 @@ app = FastAPI(lifespan=lifespan)
 
 api_prefix = "/api/v1"
 app.include_router(messages.router, prefix=api_prefix)
-app.include_router(ws.router, prefix=api_prefix)
