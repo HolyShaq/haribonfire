@@ -9,6 +9,22 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slidein: {
+          from: {
+            opacity: "0",
+            transform: "translateY(-25px)",
+          },
+          to: {
+            opacity: "100",
+            transform: "translateY(0px)",
+          }
+        },
+      },
+      animation: {
+        slidein: "slidein 0.5s ease-out forwards",
+      },
+
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
