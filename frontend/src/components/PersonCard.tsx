@@ -16,12 +16,12 @@ export default function PersonCard({
 }: PersonCardProps) {
   return (
     <div
-      className="mx-2 flex translate-y-[-25px] animate-slidein justify-between rounded-sm bg-neutral-800 p-1 opacity-0 hover:bg-stone-700"
+      className="mx-2 flex translate-y-[-25px] animate-slidein justify-between rounded-sm bg-neutral-300 p-1 opacity-0 hover:bg-stone-400 dark:bg-neutral-800 dark:hover:bg-stone-700"
       style={{
         animationDelay: `${i * 50}ms`,
       }}
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1">
         <Avatar className="h-12 w-12">
           <AvatarImage src={avatar} />
           <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
