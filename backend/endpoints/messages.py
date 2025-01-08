@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, WebSocket
 from fastapi.responses import JSONResponse
 
+from logs import logger
+
 from endpoints.ws import WebsocketBase, websocket
 
 from database.db import get_database_session
@@ -18,13 +20,18 @@ class GlobalPool:
 
     def connect(self, websocket: WebSocket):
         self.active_connections.append(websocket)
+        logger.info(f"Client {websocket.client} connected")
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
+        logger.info(f"Client {websocket.client} disconnected")
 
     async def broadcast(self, data: Message):
+        logger.info("Broadcasting message to all connections")
         for connection in self.active_connections:
             await connection.send_json(data.model_dump_json())
+            logger.info(f"Sent message to {connection.client}")
+        logger.info(f"Successfully broadcasted to {len(self.active_connections)} connections")
 
 
 global_pool = GlobalPool()
@@ -42,9 +49,8 @@ class GlobalMessagesWebsocket(WebsocketBase):
             message = Message(**json.loads(data))
             await global_pool.broadcast(message)
         except ValidationError as e:
-            print(e)
+            logger.error(e)
 
     async def on_disconnect(self):
-        print("disconnected")
         global_pool.disconnect(self.websocket)
 
