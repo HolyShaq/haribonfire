@@ -6,7 +6,11 @@ interface ChatInputProps {
   setChatInput: React.Dispatch<React.SetStateAction<string>>;
   onSend: () => void;
 }
-export default function ChatInput({ chatInput, setChatInput, onSend }: ChatInputProps) {
+export default function ChatInput({
+  chatInput,
+  setChatInput,
+  onSend,
+}: ChatInputProps) {
   return (
     <div className="group flex w-full flex-row items-center space-x-2">
       <Input
@@ -21,7 +25,6 @@ export default function ChatInput({ chatInput, setChatInput, onSend }: ChatInput
         onClick={onSend}
       >
         <PaperAirplaneIcon className="h-7 w-7 text-primary-foreground group-hover/button:motion-preset-wobble" />
-
       </div>
     </div>
   );
