@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatInput from "../ChatInput";
 import { Input } from "../ui/input";
 import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
 import Message from "../Message";
 import MessageLog from "../MessageLog";
 
+interface Message {
+  user_id: number;
+  text: string;
+  timestamp: string;
+}
+
 export default function Bonfire() {
   const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const sampleMessages = [
     {
@@ -58,10 +65,29 @@ export default function Bonfire() {
     },
   ];
 
+  useEffect(() => {
+    // TODO: Will be an API call
+    setMessages(sampleMessages);
+  }, []);
+
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
-      <MessageLog messages={sampleMessages} />
-      <ChatInput setChatInput={setChatInput} onSend={() => {}} />
+      <MessageLog messages={messages} />
+      <ChatInput
+        chatInput={chatInput}
+        setChatInput={setChatInput}
+        onSend={() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              user_id: 1,
+              text: chatInput,
+              timestamp: new Date().toISOString(),
+            },
+          ]);
+          setChatInput("");
+        }}
+      />
     </div>
   );
 }
