@@ -59,7 +59,7 @@ export default function Bonfire() {
   ];
 
   return (
-    <div className="ml-2 mr-4 mb-10 flex h-screen flex-grow flex-col">
+    <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
       <MessageLog messages={sampleMessages} />
       <ChatInput setChatInput={setChatInput} onSend={() => {}} />
     </div>

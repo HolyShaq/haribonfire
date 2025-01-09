@@ -13,7 +13,7 @@ interface MessageLogProps {
 
 export default function MessageLog({ messages }: MessageLogProps) {
   return (
-    <div className="flex flex-grow flex-col-reverse items-start justify-start px-4">
+    <div className="flex max-h-[92vh] pt-8 overflow-y-scroll flex-col-reverse items-start justify-start px-4">
       {messages
         .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
         .map((message, index) => {
