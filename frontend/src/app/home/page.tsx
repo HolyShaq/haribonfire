@@ -122,7 +122,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
         </div>
         <div className="flex">
           <ModeToggle />
-          <div className="group mx-0 flex h-10 w-10 items-center justify-center rounded-md p-1 text-foreground transition-all hover:bg-primary hover:text-primary-foreground">
+          <div className="group mx-0 flex h-10 w-10 items-center justify-center rounded-md p-1 text-primary-foreground dark:text-primary transition-all hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground">
             <Cog6ToothIcon className="h-6 w-6 transition-all motion-duration-2000 group-hover:motion-preset-spin" />
           </div>
         </div>
