@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatInput from "../ChatInput";
-import { Input } from "../ui/input";
-import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
 import MessageLog from "../MessageLog";
+import { getGlobalWebsocket } from "@/lib/api";
 import { Message } from "@/common/interfaces";
 
 export default function Bonfire({ id, name }: { id: number; name: string }) {
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  
+  const ws = useRef<WebSocket>(null);
+
   useEffect(() => {
+    // Initialize websocket connection
+    if (ws.current == null) {
+      ws.current = getGlobalWebsocket(setMessages);
+    }
+
     // TODO: Will be an API call
     setMessages([]);
   }, []);
@@ -23,15 +28,18 @@ export default function Bonfire({ id, name }: { id: number; name: string }) {
         chatInput={chatInput}
         setChatInput={setChatInput}
         onSend={() => {
-          setMessages((prev) => [
-            ...prev,
-            {
-              user_id: id,
-              user_name: name,
-              text: chatInput,
-              timestamp: new Date().toISOString(),
-            },
-          ]);
+          const messageData = {
+            user_id: id,
+            user_name: name,
+            text: chatInput,
+            timestamp: new Date().toISOString(),
+          };
+
+          // Local append
+          setMessages((prev) => [...prev, messageData]);
+
+          // Broadcast message to websocket
+          ws.current?.send(JSON.stringify(messageData));
           setChatInput("");
         }}
       />

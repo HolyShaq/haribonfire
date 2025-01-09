@@ -14,9 +14,11 @@ from database.models.messages import GlobalMessage
 
 from schemas.messages import Message
 
+
 class GlobalPool:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
+        self.socket_user_dict: dict[WebSocket, int] = {}
 
     def connect(self, websocket: WebSocket):
         self.active_connections.append(websocket)
@@ -26,12 +28,19 @@ class GlobalPool:
         self.active_connections.remove(websocket)
         logger.info(f"Client {websocket.client} disconnected")
 
-    async def broadcast(self, data: Message):
+    async def broadcast(self, data: Message, sender: WebSocket | None = None):
         logger.info("Broadcasting message to all connections")
         for connection in self.active_connections:
-            await connection.send_json(data.model_dump_json())
+            # Skip sending message to the sender
+            if sender and connection == sender:
+                continue
+
+            payload = json.dumps(data.model_dump())
+            await connection.send_text(payload)
             logger.info(f"Sent message to {connection.client}")
-        logger.info(f"Successfully broadcasted to {len(self.active_connections)} connections")
+        logger.info(
+            f"Successfully broadcasted to {len(self.active_connections)} connections"
+        )
 
 
 global_pool = GlobalPool()
@@ -47,10 +56,9 @@ class GlobalMessagesWebsocket(WebsocketBase):
     async def on_receive(self, data: str):
         try:
             message = Message(**json.loads(data))
-            await global_pool.broadcast(message)
+            await global_pool.broadcast(message, self.websocket)
         except ValidationError as e:
             logger.error(e)
 
     async def on_disconnect(self):
         global_pool.disconnect(self.websocket)
-
