@@ -29,17 +29,18 @@ class GlobalPool:
         logger.info(f"Client {websocket.client} disconnected")
 
     async def broadcast(self, data: Message, sender: WebSocket | None = None):
-        logger.info("Broadcasting message to all connections")
+        broadcasted = 0
+        if sender:
+            logger.info(f"{sender.client} broadcasted a message.")
         for connection in self.active_connections:
             # Skip sending message to the sender
             if sender and connection == sender:
                 continue
-
             payload = json.dumps(data.model_dump())
             await connection.send_text(payload)
-            logger.info(f"Sent message to {connection.client}")
+            broadcasted += 1
         logger.info(
-            f"Successfully broadcasted to {len(self.active_connections)} connections"
+            f"Successfully broadcasted to {broadcasted} connections"
         )
 
 
