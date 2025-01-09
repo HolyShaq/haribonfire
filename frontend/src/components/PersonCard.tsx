@@ -1,5 +1,3 @@
-"use client";
-
 import Private from "@/components/major/Private"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
