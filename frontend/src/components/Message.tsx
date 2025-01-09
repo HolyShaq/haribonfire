@@ -4,6 +4,7 @@ import { time } from "console";
 
 interface MessageProps {
   user_id: number;
+  user_name: string;
   text: string;
   timestamp: string;
   show_sender?: boolean;
@@ -12,6 +13,7 @@ interface MessageProps {
 // TODO: Replace with dynamic data
 export default function Message({
   user_id,
+  user_name,
   text,
   timestamp,
   show_sender = true,
@@ -31,8 +33,8 @@ export default function Message({
     >
       {show_sender ? (
         <Avatar className="h-10 w-10">
-          <AvatarImage src={avatar(user_id)} />
-          <AvatarFallback>Ac</AvatarFallback>
+          <AvatarImage src={avatar(user_id.toString() + user_name)} />
+          <AvatarFallback>{user_name.slice(0, 2)}</AvatarFallback>
         </Avatar>
       ) : (
         <div className="h-10 w-10" />
@@ -42,7 +44,7 @@ export default function Message({
         {show_sender && (
           <div className="flex flex-row items-end justify-end space-x-2">
             <span className="font-semibold leading-none">
-              Ace Byrone Halili
+              {user_name}
             </span>
             <span className="text-xs leading-none text-muted-foreground">
               {timestampString}

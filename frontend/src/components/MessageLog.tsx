@@ -6,6 +6,7 @@ import Message from "./Message";
 interface MessageLogProps {
   messages: {
     user_id: number;
+    user_name: string;
     text: string;
     timestamp: string;
     show_sender?: boolean;

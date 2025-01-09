@@ -9,8 +9,9 @@ import PersonCard from "@/components/PersonCard";
 import RandomSVG from "@/components/RandomSVG";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { avatar } from "@/lib/utils";
+import { avatar, randomName } from "@/lib/utils";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
+import { Mate } from "next/font/google";
 import { useState } from "react";
 
 export default function ChatLayout() {
@@ -37,7 +38,9 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
         <div
           className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:pl-14 dark:bg-neutral-800 dark:hover:bg-primary"
           onClick={() => {
-            setSelectedContent(<Bonfire />);
+            const id = Math.floor(Math.random() * 100);
+            const name = randomName();
+            setSelectedContent(<Bonfire id={id} name={name} />);
           }}
         >
           <LogoSVG className="m-4 mx-0 h-8 w-8 rounded-full bg-primary p-1 text-primary-foreground transition-all group-hover:bg-stone-900 group-hover:text-primary" />

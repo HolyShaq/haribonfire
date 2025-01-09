@@ -9,65 +9,18 @@ import MessageLog from "../MessageLog";
 
 interface Message {
   user_id: number;
+  user_name: string;
   text: string;
   timestamp: string;
 }
 
-export default function Bonfire() {
+export default function Bonfire({ id, name }: { id: number; name: string }) {
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-
-  const sampleMessages = [
-    {
-      user_id: 1,
-      text: "Hello, how are you?",
-      timestamp: "2023-08-12T10:00:00Z",
-    },
-    {
-      user_id: 2,
-      text: "I'm good, thanks! How about you?",
-      timestamp: "2023-08-12T10:01:00Z",
-    },
-    {
-      user_id: 1,
-      text: "I'm also doing well, thanks for asking.",
-      timestamp: "2023-08-12T10:02:00Z",
-    },
-    {
-      user_id: 1,
-      text: "Wanna fuck?",
-      timestamp: "2023-08-12T10:03:00Z",
-    },
-    {
-      user_id: 1,
-      text: "like rn",
-      timestamp: "2023-08-12T10:03:01Z",
-    },
-    {
-      user_id: 2,
-      text: "Wtf",
-      timestamp: "2023-08-12T10:04:00Z",
-    },
-    {
-      user_id: 1,
-      text: "How about now?",
-      timestamp: "2023-08-13T10:04:00Z",
-    },
-    {
-      user_id: 2,
-      text: "Lol no",
-      timestamp: "2023-08-13T10:05:00Z",
-    },
-    {
-      user_id: 2,
-      text: "Creep",
-      timestamp: "2023-08-13T10:06:00Z",
-    },
-  ];
-
+  
   useEffect(() => {
     // TODO: Will be an API call
-    setMessages(sampleMessages);
+    setMessages([]);
   }, []);
 
   return (
@@ -80,7 +33,8 @@ export default function Bonfire() {
           setMessages((prev) => [
             ...prev,
             {
-              user_id: 1,
+              user_id: id,
+              user_name: name,
               text: chatInput,
               timestamp: new Date().toISOString(),
             },
