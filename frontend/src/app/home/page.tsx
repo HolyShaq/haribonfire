@@ -10,7 +10,6 @@ import RandomSVG from "@/components/RandomSVG";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
-import { AvatarGenerator } from "random-avatar-generator";
 import { useState } from "react";
 
 export default function ChatLayout() {
@@ -31,8 +30,6 @@ interface SidebarProps {
 }
 
 function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
-  const avatarGenerator = new AvatarGenerator();
-
   return (
     <div className="m-1 flex w-1/5 flex-col space-y-2 rounded-sm bg-stone-200 p-1 dark:bg-stone-900">
       <div className="flex w-full flex-col justify-center space-y-1">
@@ -86,7 +83,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
             <PersonCard
               key={i}
               name={`Person ${i}`}
-              avatar={avatarGenerator.generateRandomAvatar()}
+              avatar={"https://github.com/shadcn.png"}
               course="Computer Science"
               setSelectedContent={setSelectedContent}
               i={i}
@@ -101,7 +98,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
             <PersonCard
               key={i}
               name={`Person ${i}`}
-              avatar={avatarGenerator.generateRandomAvatar()}
+              avatar={"https://github.com/shadcn.png"}
               course="Computer Science"
               setSelectedContent={setSelectedContent}
               i={i}
@@ -112,7 +109,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
       <div className="flex w-full items-center justify-between rounded-md bg-stone-200 px-2 dark:bg-stone-900">
         <div className="flex w-full items-center space-x-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
           <Avatar className="m-1 ml-0 h-12 w-12">
-            <AvatarImage src={avatarGenerator.generateRandomAvatar()} />
+            <AvatarImage src={"https://github.com/shadcn.png"} />
             <AvatarFallback>Ac</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start justify-center">
