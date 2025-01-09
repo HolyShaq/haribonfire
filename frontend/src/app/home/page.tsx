@@ -16,7 +16,7 @@ export default function ChatLayout() {
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>(<Home />);
 
   return (
-    <div className="flex h-screen w-screen bg-background">
+    <div className="flex h-screen w-screen bg-zinc-100 dark:bg-zinc-900">
       <Sidebar setSelectedContent={setSelectedContent} />
       <div className="flex h-screen flex-grow items-center justify-center">
         {selectedContent}
@@ -31,10 +31,10 @@ interface SidebarProps {
 
 function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
   return (
-    <div className="m-1 flex w-1/5 flex-col space-y-2 rounded-sm bg-stone-200 p-1 dark:bg-stone-900">
+    <div className="m-1 flex flex-col space-y-2 w-fit rounded-sm bg-stone-200 p-1 dark:bg-stone-900">
       <div className="flex w-full flex-col justify-center space-y-1">
         <div
-          className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:px-16 dark:bg-neutral-800 dark:hover:bg-primary"
+          className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:pl-14 dark:bg-neutral-800 dark:hover:bg-primary"
           onClick={() => {
             setSelectedContent(<Bonfire />);
           }}
@@ -45,7 +45,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
           </span>
         </div>
         <div
-          className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:px-16 dark:bg-neutral-800 dark:hover:bg-primary"
+          className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:pl-14 dark:bg-neutral-800 dark:hover:bg-primary"
           onClick={() => {
             setSelectedContent(<Random />);
           }}
