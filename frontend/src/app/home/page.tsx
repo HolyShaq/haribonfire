@@ -83,7 +83,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
             <PersonCard
               key={i}
               name={`Person ${i}`}
-              avatar={"https://github.com/shadcn.png"}
+              avatar={`https://robohash.org/${i}?set=set4`}
               course="Computer Science"
               setSelectedContent={setSelectedContent}
               i={i}
@@ -98,7 +98,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
             <PersonCard
               key={i}
               name={`Person ${i}`}
-              avatar={"https://github.com/shadcn.png"}
+              avatar={`https://robohash.org/${i}?set=set4`}
               course="Computer Science"
               setSelectedContent={setSelectedContent}
               i={i}
@@ -109,7 +109,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
       <div className="flex w-full items-center justify-between rounded-md bg-stone-200 pr-2 dark:bg-stone-900">
         <div className="flex w-full items-center space-x-2 px-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
           <Avatar className="m-1 ml-0 h-12 w-12">
-            <AvatarImage src={"https://github.com/shadcn.png"} />
+            <AvatarImage src={"https://robohash.org/acehalili?set=set4"} />
             <AvatarFallback>Ac</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start justify-center">
