@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import ChatDivider from "./ChatDivider";
 import DateDivider from "./DateDivider";
 import Message from "./Message";
@@ -34,11 +35,11 @@ export default function MessageLog({ messages }: MessageLogProps) {
           }
 
           return (
-            <>
-              <Message key={index} {...message} />
-              {differentDay && <DateDivider date={message.timestamp} start={start} />}
+            <Fragment key={index}>
+              <Message  {...message} />
+              {differentDay && <DateDivider date={message.timestamp} />}
               {start && <ChatDivider />}
-            </>
+            </Fragment>
           );
         })}
     </div>
