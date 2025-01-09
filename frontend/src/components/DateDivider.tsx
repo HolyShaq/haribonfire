@@ -12,9 +12,9 @@ export default function DateDivider({ date }: DateDividerProps) {
   const dateString = dateFormat.format(dateObj)
   return (
     <div className="flex flex-row w-full items-center mb-5 space-x-2 justify-evenly">
-      <div className="flex-grow h-[1px] bg-muted" />
+      <div className="flex-grow h-[1px] bg-neutral-300 dark:bg-muted" />
       <span className="text-xs text-muted-foreground">{dateString}</span>
-      <div className="flex-grow h-[1px] bg-muted" />
+      <div className="flex-grow h-[1px] bg-neutral-300 dark:bg-muted" />
     </div>
   )
 }
