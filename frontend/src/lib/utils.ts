@@ -15,7 +15,6 @@ export function randomName() {
     dictionaries: [adjectives, animals],
     separator: " ",
     length: 2,
-    style: "capital",
   })
   return name
 }
