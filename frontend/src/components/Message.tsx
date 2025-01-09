@@ -1,12 +1,8 @@
 import { avatar, cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { time } from "console";
+import { Message as MessageInterface} from "@/common/interfaces";
 
-interface MessageProps {
-  user_id: number;
-  user_name: string;
-  text: string;
-  timestamp: string;
+export interface MessageProps extends MessageInterface {
   show_sender?: boolean;
 }
 

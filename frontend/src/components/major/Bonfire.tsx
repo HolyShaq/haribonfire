@@ -4,15 +4,8 @@ import { useEffect, useState } from "react";
 import ChatInput from "../ChatInput";
 import { Input } from "../ui/input";
 import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
-import Message from "../Message";
 import MessageLog from "../MessageLog";
-
-interface Message {
-  user_id: number;
-  user_name: string;
-  text: string;
-  timestamp: string;
-}
+import { Message } from "@/common/interfaces";
 
 export default function Bonfire({ id, name }: { id: number; name: string }) {
   const [chatInput, setChatInput] = useState("");
