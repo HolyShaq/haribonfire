@@ -10,20 +10,18 @@ export default function ChatInput({ chatInput, setChatInput, onSend }: ChatInput
   return (
     <div className="group flex w-full flex-row items-center space-x-2">
       <Input
-        className="h-12 bg-neutral-200 dark:bg-neutral-800 ring-offset-primary transition-all focus-visible:w-10/12"
+        className="h-12 bg-neutral-200 dark:bg-neutral-800 ring-offset-primary transition-all flex-grow"
         placeholder="Send a message"
         value={chatInput}
         onChange={(e) => setChatInput(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && onSend()}
       />
       <div
-        className="group/button flex flex-grow items-center justify-start rounded-2xl bg-primary p-1 transition-all group-focus-within:h-12 group-focus-within:rounded-sm group-focus-within:pl-6"
+        className="group/button flex group-focus-within:min-w-[80px] min-w-9 w-9 group-focus-within:w-[80px] items-center justify-center rounded-2xl bg-primary p-1 transition-all group-focus-within:h-12 group-focus-within:rounded-sm"
         onClick={onSend}
       >
         <PaperAirplaneIcon className="h-7 w-7 text-primary-foreground group-hover/button:motion-preset-wobble" />
-        <span className="absolute translate-x-[-90px] text-nowrap text-primary-foreground opacity-0 transition-all group-focus-within:translate-x-0 group-focus-within:pl-9 group-focus-within:opacity-100">
-          Send message
-        </span>
+
       </div>
     </div>
   );
