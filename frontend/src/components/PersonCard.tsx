@@ -1,10 +1,13 @@
+"use client";
+
+import Private from "@/components/major/Private"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
 
 interface PersonCardProps {
   avatar: string;
   name: string;
   course: string;
+  setSelectedContent: React.Dispatch<React.SetStateAction<React.ReactNode>>;
   i?: number;
 }
 
@@ -12,6 +15,7 @@ export default function PersonCard({
   avatar,
   name,
   course,
+  setSelectedContent,
   i = 0,
 }: PersonCardProps) {
   return (
@@ -20,6 +24,12 @@ export default function PersonCard({
       style={{
         animationDelay: `${i * 50}ms`,
       }}
+
+      onClick={
+        () => {
+          setSelectedContent && setSelectedContent(<Private id={i} />)
+        }
+      }
     >
       <div className="flex items-center space-x-1">
         <Avatar className="h-12 w-12">
