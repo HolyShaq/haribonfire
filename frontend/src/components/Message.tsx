@@ -1,5 +1,6 @@
 import { avatar, cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { time } from "console";
 
 interface MessageProps {
   user_id: number;
@@ -15,8 +16,19 @@ export default function Message({
   timestamp,
   show_sender = true,
 }: MessageProps) {
+  const datetimeFormat = new Intl.DateTimeFormat("default", {
+    "hour": "numeric",
+    "minute": "numeric",
+  })
+  const datetime = new Date(timestamp);
+  const timestampString = datetimeFormat.format(datetime)
   return (
-    <div className={ cn( "flex flex-row items-center justify-start space-x-3 mb-6", !show_sender && "mb-[14px] mt-[-26px]" ) }>
+    <div
+      className={cn(
+        "flex flex-row items-center justify-start space-x-3 mb-6",
+        !show_sender && "mb-[14px] mt-[-26px]",
+      )}
+    >
       {show_sender ? (
         <Avatar className="h-10 w-10">
           <AvatarImage src={avatar(user_id)} />
@@ -33,11 +45,11 @@ export default function Message({
               Ace Byrone Halili
             </span>
             <span className="text-xs leading-none text-muted-foreground">
-              {new Date(timestamp).toLocaleString()}
+              {timestampString}
             </span>
           </div>
         )}
-        <span className={ cn( "text-sm leading-none font-light" ) }>{text}</span>
+        <span className={cn("text-sm leading-none font-light")}>{text}</span>
       </div>
     </div>
   );
