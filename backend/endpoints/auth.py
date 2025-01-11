@@ -1,12 +1,11 @@
 import os
-from pprint import pprint
 import httpx
 import urllib.parse
 from jose import jwt, JWTError
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, status
 from fastapi.exceptions import HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from fastapi.responses import RedirectResponse, Response
 from sqlalchemy.orm import Session
 
 from database.db import get_database_session
@@ -16,7 +15,7 @@ from database.controllers.users import create_user
 load_dotenv("./../.env")
 STATE = "12345"
 NONCE = "6789"
-
+FRONTEND_URL = "http://localhost:3000"
 
 async def get_jwks():
     """
@@ -127,3 +126,38 @@ async def logout_callback():
     response = Response(status_code=status.HTTP_200_OK, content="Successfully logged out")
     response.delete_cookie("id_token")
     return response
+
+
+@router.get("/fakelogin/")
+async def fake_login(id: str, name: str, email: str, session: Session = Depends(get_database_session)):
+    user_data = {"id": id, "name": name, "email": email}
+    response = RedirectResponse(url=f"{FRONTEND_URL}/home")
+
+    create_user(User(**user_data), session)
+
+    payload = {
+        "sub": id,
+        "name": name,
+        "email": email
+    }
+    id_token = jwt.encode(payload, "test", algorithm="HS256")
+    response.set_cookie("id_token", id_token)
+
+    return response
+
+@router.get("/fakelogout/")
+async def fake_logout():
+    response = RedirectResponse(url=f"{FRONTEND_URL}")
+    response.delete_cookie("id_token")
+    return response
+
+
+
+
+
+
+
+
+
+
+
