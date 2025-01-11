@@ -2,6 +2,7 @@ import { IDToken, User } from "@/common/interfaces";
 import { getCookie } from "cookies-next/client";
 import { jwtDecode } from "jwt-decode"
 import { redirect, RedirectType } from "next/navigation";
+import { randomName } from "./utils";
 
 const API_BASE_URL = `http://localhost:8000/api/v1/`;
 
@@ -21,4 +22,11 @@ export function loggedInUser(): User | null {
   } else {
     return null
   }
+}
+
+export function fakelogin(id: string) {
+  const name = randomName();
+  const email = `${name}@haribonfire.com`;
+  const url = `${API_BASE_URL}auth/fakelogin?id=${id}&name=${name}&email=${email}`
+  redirect(url.replaceAll(" ", "%20"), RedirectType.push);
 }

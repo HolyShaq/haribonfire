@@ -16,9 +16,8 @@ import { redirect, RedirectType } from "next/navigation";
 import { useState } from "react";
 
 export default function ChatLayout() {
-  const user = loggedInUser();
-  if (!user) {
-    return redirect("/login", RedirectType.replace);
+  if (!loggedInUser()) {
+    return redirect("/", RedirectType.replace);
   }
 
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>(<Home />);
@@ -38,6 +37,7 @@ interface SidebarProps {
 }
 
 function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
+  const user = loggedInUser()!;
   return (
     <div className="m-1 flex flex-col space-y-2 w-fit rounded-sm bg-stone-200 p-1 dark:bg-stone-900">
       <div className="flex w-full flex-col justify-center space-y-1">
@@ -123,7 +123,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
             <AvatarFallback>Ac</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start justify-center">
-            <p className="text-sm font-medium leading-none">Ace Byrone</p>
+            <p className="text-sm font-medium leading-none">{user.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
               Computer Science
             </p>
