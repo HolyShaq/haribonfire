@@ -1,3 +1,4 @@
+from operator import concat
 import os
 from pprint import pprint
 import httpx
@@ -67,6 +68,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.get("/login")
 def login():
     client_id = os.getenv("CLIENT_ID")
+
+    # This points to /login/callback
     redirect_uri = "http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fv1%2Fauth%2Flogin%2Fcallback"
     params = {
         "client_id": client_id,
@@ -77,7 +80,7 @@ def login():
         "nonce": NONCE,
     }
     auth_url = (
-        f"{os.getenv("BASE_URL")}?"
+        f"{os.getenv("BASE_URL")}/authorize?"
         f"{urllib.parse.urlencode(params)}&"
         f"redirect_uri={redirect_uri}"
     )
@@ -101,3 +104,17 @@ async def login_callback(request: Request, session: Session = Depends(get_databa
     create_user(payload, session)
 
     return Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
+
+@router.get("/logout")
+async def logout():
+    # This points to /logout/callback
+    redirect_uri = "http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fv1%2Fauth%2Flogout%2Fcallback"
+    logout_url = (
+        f"{os.getenv('BASE_URL')}/logout?"
+        f"post_logout_redirect_uri={redirect_uri}"
+    )
+    return RedirectResponse(url=logout_url)
+
+@router.get("/logout/callback")
+async def logout_callback():
+    return Response(status_code=status.HTTP_200_OK, content="Successfully logged out")
