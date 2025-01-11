@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from dotenv import load_dotenv
+from logs import logger
 
 # Initialize the database engine
 load_dotenv("./../.env")
@@ -25,3 +26,4 @@ Base = declarative_base()
 # Function to initialize the database
 def initialize_database():
     Base.metadata.create_all(engine)
+    logger.info("Database created!")
