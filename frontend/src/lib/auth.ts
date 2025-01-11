@@ -9,7 +9,7 @@ export function login() {
   redirect(`${API_BASE_URL}auth/login`, RedirectType.push);
 }
 
-export function loggedInUser(): boolean | User {
+export function loggedInUser(): User | null {
   const id_token = getCookie("id_token")
   if (id_token) {
     const payload = jwtDecode<IDToken>(id_token)
@@ -19,6 +19,6 @@ export function loggedInUser(): boolean | User {
       email: payload.email,
     }
   } else {
-    return false
+    return null
   }
 }
