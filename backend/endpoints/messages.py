@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 from database.controllers.messages import create_global_message
 from database.db import get_database_session
 from database.models.messages import GlobalMessage
+from database.models.users import User
 from logs import logger
+from pprint import pprint
 
 from endpoints.ws import WebsocketBase, websocket
 
@@ -16,12 +18,22 @@ from schemas.messages import Message
 # RESTs
 router = APIRouter(prefix="/messages", tags=["messages"])
 
-@router.get("/global/")
+
+@router.get("/global/", response_model=list[Message])
 def get_global_messages(session: Session = Depends(get_database_session)):
-    return session.query(GlobalMessage).all()
+    messages = session.query(GlobalMessage).all()
+
+    return [Message(
+        user_id=message.sender_id,
+        user_name=message.user.name,
+        text=message.text,
+        sent_at=message.sent_at
+    ).model_dump() for message in messages]
+
 
 # Websockets
 ws_router = APIRouter(prefix="/ws", tags=["messages"])
+
 
 class GlobalPool:
     def __init__(self):
@@ -47,9 +59,9 @@ class GlobalPool:
             payload = json.dumps(data.model_dump())
             await connection.send_text(payload)
             broadcasted += 1
-        logger.info(
-            f"Successfully broadcasted to {broadcasted} connections"
-        )
+        logger.info(f"Successfully broadcasted to {broadcasted} connections")
+
+
 global_pool = GlobalPool()
 
 

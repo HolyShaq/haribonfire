@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ChatInput from "../ChatInput";
 import MessageLog from "../MessageLog";
-import { getGlobalWebsocket } from "@/lib/api";
+import { getGlobalMessages, getGlobalWebsocket } from "@/lib/api";
 import { Message } from "@/common/interfaces";
 import { loggedInUser } from "@/lib/auth";
 
@@ -19,8 +19,10 @@ export default function Bonfire() {
       ws.current = getGlobalWebsocket(setMessages);
     }
 
-    // TODO: Will be an API call
-    setMessages([]);
+    // Fetch global messages
+    getGlobalMessages().then((data) => {
+      setMessages(data);
+    });
   }, []);
 
   return (

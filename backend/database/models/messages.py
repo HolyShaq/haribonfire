@@ -58,5 +58,8 @@ class GlobalMessage(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
+    # Relationship
+    user: Mapped["User"] = relationship(foreign_keys=[sender_id])
+
     def __repr__(self):
         return f"GlobalMessage(id={self.id}, message={self.text}, sender_id={self.sender_id}, sent_at={self.sent_at})"
