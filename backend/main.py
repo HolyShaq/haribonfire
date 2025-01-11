@@ -18,4 +18,5 @@ app = FastAPI(lifespan=lifespan)
 
 api_prefix = "/api/v1"
 app.include_router(messages.router, prefix=api_prefix)
+app.include_router(messages.ws_router, prefix=api_prefix)
 app.include_router(auth.router, prefix=api_prefix)
