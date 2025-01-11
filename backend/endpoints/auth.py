@@ -1,4 +1,3 @@
-from operator import concat
 import os
 from pprint import pprint
 import httpx
@@ -88,7 +87,9 @@ def login():
 
 
 @router.post("/login/callback")
-async def login_callback(request: Request, session: Session = Depends(get_database_session)):
+async def login_callback(
+    request: Request, session: Session = Depends(get_database_session)
+):
     form_data = await request.form()
 
     # Check validity
@@ -98,23 +99,31 @@ async def login_callback(request: Request, session: Session = Depends(get_databa
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid state"
         )
 
+    # Decrypt token
     id_token = form_data.get("id_token")
     payload = await decrypt_id_token(str(id_token))
 
     create_user(payload, session)
 
-    return Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
+    # Construct response
+    response = Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
+    response.set_cookie("id_token", str(id_token))
+
+    return response
+
 
 @router.get("/logout")
 async def logout():
     # This points to /logout/callback
     redirect_uri = "http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fv1%2Fauth%2Flogout%2Fcallback"
     logout_url = (
-        f"{os.getenv('BASE_URL')}/logout?"
-        f"post_logout_redirect_uri={redirect_uri}"
+        f"{os.getenv('BASE_URL')}/logout?" f"post_logout_redirect_uri={redirect_uri}"
     )
     return RedirectResponse(url=logout_url)
 
+
 @router.get("/logout/callback")
 async def logout_callback():
-    return Response(status_code=status.HTTP_200_OK, content="Successfully logged out")
+    response = Response(status_code=status.HTTP_200_OK, content="Successfully logged out")
+    response.delete_cookie("id_token")
+    return response
