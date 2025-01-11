@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -8,7 +9,7 @@ export default function Home() {
       <span className="text-4xl font-bold">Welcome to Haribonfire!</span>
       <Button className="mt-4" variant="outline"
         onClick={() => {
-          window.location.href = "/home/"
+          login()
         }}
       >
         Log in with Microsoft

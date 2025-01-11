@@ -5,6 +5,7 @@ const API_BASE_URL = 'localhost:8000/api/v1/'
 const HTTP_BASE_URL = `http://${API_BASE_URL}`
 const WEBSOCKET_BASE_URL = `ws://${API_BASE_URL}`
 
+// Websockets
 export function getGlobalWebsocket(setMessages: React.Dispatch<React.SetStateAction<Message[]>>) {
   const ws = new WebSocket(WEBSOCKET_BASE_URL + 'ws/global/')
   ws.onerror = (event) => {
