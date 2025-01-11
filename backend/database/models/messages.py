@@ -17,8 +17,8 @@ class ChatRoom(Base):
     __tablename__ = "chat_rooms"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    participant_1_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    participant_2_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    participant_1_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    participant_2_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     room_type: Mapped[ChatRoomType] = mapped_column(
         Enum(ChatRoomType, create_constraint=True, validate_strings=True)
     )
@@ -36,8 +36,8 @@ class Message(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     chat_room_id: Mapped[int] = mapped_column(ForeignKey("chat_rooms.id"))
     message: Mapped[str]
-    sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    receiver_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    receiver_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     sent_at: Mapped[DateTimeType] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -52,7 +52,7 @@ class GlobalMessage(Base):
     __tablename__ = "global_messages"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     message: Mapped[str]
     sent_at: Mapped[DateTimeType] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

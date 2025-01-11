@@ -56,8 +56,8 @@ class User(Base):
 class ReportedUser(Base):
     __tablename__ = "reported_users"
 
-    reporter_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    reported_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    reporter_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    reported_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     reported_message_id: Mapped[int] = mapped_column(ForeignKey("messages.id"), primary_key=True)
     reason: Mapped[str]
     status: Mapped[Status] = mapped_column(
