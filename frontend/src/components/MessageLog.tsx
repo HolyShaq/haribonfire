@@ -12,7 +12,7 @@ export default function MessageLog({ messages }: MessageLogProps) {
   return (
     <div className="flex max-h-[92vh] pt-8 overflow-y-scroll flex-col-reverse items-start justify-start px-4">
       {messages
-        .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+        .sort((a, b) => b.sent_at.localeCompare(a.sent_at))
         .map((message, index) => {
           let differentDay = false;
           let start = false;
@@ -24,8 +24,8 @@ export default function MessageLog({ messages }: MessageLogProps) {
             }
             // Handle differentDay flag
             differentDay =
-              prevMessage.timestamp.split("T")[0] !=
-              message.timestamp.split("T")[0];
+              prevMessage.sent_at.split("T")[0] !=
+              message.sent_at.split("T")[0];
           } else {
             start = true;
           }
@@ -33,7 +33,7 @@ export default function MessageLog({ messages }: MessageLogProps) {
           return (
             <Fragment key={index}>
               <Message {...message} />
-              {differentDay && <DateDivider date={message.timestamp} />}
+              {differentDay && <DateDivider date={message.sent_at} />}
               {start && <ChatDivider />}
             </Fragment>
           );

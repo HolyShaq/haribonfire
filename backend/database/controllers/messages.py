@@ -10,7 +10,7 @@ def create_global_message(message: Message):
         global_message = GlobalMessage(
             sender_id=message.user_id,
             message=message.text,
-            sent_at=datetime.fromisoformat(message.timestamp)
+            sent_at=datetime.fromisoformat(message.sent_at)
         )
         session.add(global_message)
         session.commit()

@@ -11,14 +11,14 @@ export default function Message({
   user_id,
   user_name,
   text,
-  timestamp,
+  sent_at,
   show_sender = true,
 }: MessageProps) {
   const datetimeFormat = new Intl.DateTimeFormat("default", {
     "hour": "numeric",
     "minute": "numeric",
   })
-  const datetime = new Date(timestamp);
+  const datetime = new Date(sent_at);
   const timestampString = datetimeFormat.format(datetime)
   return (
     <div
