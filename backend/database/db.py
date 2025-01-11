@@ -1,9 +1,11 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from dotenv import load_dotenv
 
 # Initialize the database engine
-# database_url = "postgresql://localhost:5432/haribonfire-db"
-database_url = "sqlite:///haribonfire.db"
+load_dotenv("./../.env")
+database_url = str(os.getenv("DATABASE_URL"))
 engine = create_engine(database_url)
 
 # Define a session dependency
