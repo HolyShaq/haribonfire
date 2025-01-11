@@ -10,7 +10,7 @@ export interface User {
 export interface IDToken extends User, JwtPayload {}
 
 export interface Message {
-  user_id: number;
+  user_id: string;
   user_name: string;
   text: string;
   timestamp: string;
