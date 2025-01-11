@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse, Response
+from sqlalchemy.engine import create
 from sqlalchemy.orm import Session
 
 from database.db import get_database_session
@@ -130,16 +131,23 @@ async def logout_callback():
 
 @router.get("/fakelogin/")
 async def fake_login(id: str, name: str, email: str, session: Session = Depends(get_database_session)):
-    user_data = {"id": id, "name": name, "email": email}
     response = RedirectResponse(url=f"{FRONTEND_URL}/home")
 
-    create_user(User(**user_data), session)
+    user = session.query(User).filter_by(id=id).first()
+    if user is None:
+        payload = {
+            "sub": id,
+            "name": name,
+            "email": email
+        }
+        create_user(User(id=id, name=name, email=email), session)
+    else:
+        payload = {
+            "sub": user.id,
+            "name": user.name,
+            "email": user.email
+        }
 
-    payload = {
-        "sub": id,
-        "name": name,
-        "email": email
-    }
     id_token = jwt.encode(payload, "test", algorithm="HS256")
     response.set_cookie("id_token", id_token)
 
