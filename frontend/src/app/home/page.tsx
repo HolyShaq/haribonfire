@@ -9,12 +9,18 @@ import PersonCard from "@/components/PersonCard";
 import RandomSVG from "@/components/RandomSVG";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { loggedInUser } from "@/lib/auth";
 import { avatar, randomName } from "@/lib/utils";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
-import { Mate } from "next/font/google";
+import { redirect, RedirectType } from "next/navigation";
 import { useState } from "react";
 
 export default function ChatLayout() {
+  const user = loggedInUser();
+  if (!user) {
+    return redirect("/login", RedirectType.replace);
+  }
+
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>(<Home />);
 
   return (
