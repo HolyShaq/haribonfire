@@ -9,7 +9,7 @@ def create_global_message(message: Message):
     with Session() as session:
         global_message = GlobalMessage(
             sender_id=message.user_id,
-            message=message.text,
+            text=message.text,
             sent_at=datetime.fromisoformat(message.sent_at)
         )
         session.add(global_message)
