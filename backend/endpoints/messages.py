@@ -1,14 +1,27 @@
 import json
 from pydantic import ValidationError
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, Depends, WebSocket
+from sqlalchemy.orm import Session
 
 from database.controllers.messages import create_global_message
+from database.db import get_database_session
+from database.models.messages import GlobalMessage
 from logs import logger
 
 from endpoints.ws import WebsocketBase, websocket
 
 from schemas.messages import Message
 
+
+# RESTs
+router = APIRouter(prefix="/messages", tags=["messages"])
+
+@router.get("/global/")
+def get_global_messages(session: Session = Depends(get_database_session)):
+    return session.query(GlobalMessage).all()
+
+# Websockets
+ws_router = APIRouter(prefix="/ws", tags=["messages"])
 
 class GlobalPool:
     def __init__(self):
@@ -37,13 +50,10 @@ class GlobalPool:
         logger.info(
             f"Successfully broadcasted to {broadcasted} connections"
         )
-
-
 global_pool = GlobalPool()
-router = APIRouter(prefix="/ws", tags=["messages"])
 
 
-@websocket(router, "/global/")
+@websocket(ws_router, "/global/")
 class GlobalMessagesWebsocket(WebsocketBase):
     async def on_connect(self):
         await self.websocket.accept()
