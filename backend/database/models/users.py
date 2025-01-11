@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import Column, Enum, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm.properties import ForeignKey
@@ -31,10 +32,10 @@ blocked_users_association = Table(
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]
     email: Mapped[str]
-    course: Mapped[str]
+    course: Mapped[Optional[str]]
 
     # Relationships
     friends: Mapped[list["User"]] = relationship(

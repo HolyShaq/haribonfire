@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Request, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from sqlalchemy.orm import Session
+
+from database.db import get_database_session
+from database.models.users import User
+from database.controllers.users import create_user
 
 load_dotenv("./../.env")
 STATE = "12345"
@@ -25,10 +30,10 @@ async def get_jwks():
         return (await client.get(jwks_url)).json()
 
 
-async def decrypt_id_token(id_token: str):
+async def decrypt_id_token(id_token: str) -> User:
     """
     Validates and decrypts an ID token,
-    and then returns a User from that token.
+    and then returns a User object from that token.
     """
 
     client_id = os.getenv("CLIENT_ID")
@@ -49,7 +54,11 @@ async def decrypt_id_token(id_token: str):
             detail="Could not validate credentials",
         )
 
-    return payload
+    return User(
+        id=payload["sub"],
+        name=payload["name"],
+        email=payload["email"],
+    )
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -76,7 +85,7 @@ def login():
 
 
 @router.post("/login/callback")
-async def login_callback(request: Request):
+async def login_callback(request: Request, session: Session = Depends(get_database_session)):
     form_data = await request.form()
 
     # Check validity
@@ -88,6 +97,7 @@ async def login_callback(request: Request):
 
     id_token = form_data.get("id_token")
     payload = await decrypt_id_token(str(id_token))
-    pprint(payload)
 
-    return Response(status_code=status.HTTP_200_OK)
+    create_user(payload, session)
+
+    return Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
