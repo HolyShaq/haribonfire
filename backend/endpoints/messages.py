@@ -1,16 +1,11 @@
 import json
 from pydantic import ValidationError
-from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, WebSocket
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, WebSocket
 
+from database.controllers.messages import create_global_message
 from logs import logger
 
 from endpoints.ws import WebsocketBase, websocket
-
-from database.db import get_database_session
-from database.models.users import User
-from database.models.messages import GlobalMessage
 
 from schemas.messages import Message
 
@@ -58,6 +53,7 @@ class GlobalMessagesWebsocket(WebsocketBase):
         try:
             message = Message(**json.loads(data))
             await global_pool.broadcast(message, self.websocket)
+            create_global_message(message)
         except ValidationError as e:
             logger.error(e)
 
