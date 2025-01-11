@@ -1,10 +1,10 @@
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import Column, DateTime, Enum, Table
 from sqlalchemy import orm
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm.properties import ForeignKey
-from sqlalchemy.types import DateTime as DateTimeType
 
 from database.core.enums import ChatRoomStatus, ChatRoomType
 
@@ -38,7 +38,7 @@ class Message(Base):
     text: Mapped[str]
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     receiver_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    sent_at: Mapped[DateTimeType] = mapped_column(
+    sent_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
 
@@ -54,7 +54,7 @@ class GlobalMessage(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     text: Mapped[str]
-    sent_at: Mapped[DateTimeType] = mapped_column(
+    sent_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
 

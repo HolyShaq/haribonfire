@@ -12,18 +12,18 @@ from pprint import pprint
 
 from endpoints.ws import WebsocketBase, websocket
 
-from schemas.messages import Message
+from schemas.messages import Message, MessageResponse
 
 
 # RESTs
 router = APIRouter(prefix="/messages", tags=["messages"])
 
 
-@router.get("/global/", response_model=list[Message])
+@router.get("/global/", response_model=list[MessageResponse])
 def get_global_messages(session: Session = Depends(get_database_session)):
     messages = session.query(GlobalMessage).all()
 
-    return [Message(
+    return [MessageResponse(
         user_id=message.sender_id,
         user_name=message.user.name,
         text=message.text,
