@@ -5,8 +5,10 @@ import ChatInput from "../ChatInput";
 import MessageLog from "../MessageLog";
 import { getGlobalWebsocket } from "@/lib/api";
 import { Message } from "@/common/interfaces";
+import { loggedInUser } from "@/lib/auth";
 
-export default function Bonfire({ id, name }: { id: number; name: string }) {
+export default function Bonfire() {
+  const user = loggedInUser()!;
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const ws = useRef<WebSocket>(null);
@@ -29,8 +31,8 @@ export default function Bonfire({ id, name }: { id: number; name: string }) {
         setChatInput={setChatInput}
         onSend={() => {
           const messageData = {
-            user_id: id,
-            user_name: name,
+            user_id: user.id,
+            user_name: user.name,
             text: chatInput,
             timestamp: new Date().toISOString(),
           };
