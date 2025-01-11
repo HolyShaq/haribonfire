@@ -34,7 +34,7 @@ export default function Bonfire() {
             user_id: user.id!,
             user_name: user.name,
             text: chatInput,
-            timestamp: new Date().toISOString(),
+            sent_at: new Date().toISOString(),
           };
 
           // Local append

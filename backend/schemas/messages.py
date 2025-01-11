@@ -4,4 +4,4 @@ class Message(BaseModel):
     user_id: int
     user_name: str
     text: str
-    timestamp: str
+    sent_at: str

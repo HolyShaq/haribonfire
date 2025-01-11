@@ -35,7 +35,7 @@ class Message(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     chat_room_id: Mapped[int] = mapped_column(ForeignKey("chat_rooms.id"))
-    message: Mapped[str]
+    text: Mapped[str]
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     receiver_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     sent_at: Mapped[DateTimeType] = mapped_column(
@@ -46,17 +46,17 @@ class Message(Base):
     chat_room: Mapped[ChatRoom] = relationship(back_populates="messages")
 
     def __repr__(self):
-        return f"Message(id={self.id}, message={self.message}, sender_id={self.sender_id}, receiver_id={self.receiver_id}, sent_at={self.sent_at})"
+        return f"Message(id={self.id}, message={self.text}, sender_id={self.sender_id}, receiver_id={self.receiver_id}, sent_at={self.sent_at})"
 
 class GlobalMessage(Base):
     __tablename__ = "global_messages"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    message: Mapped[str]
+    text: Mapped[str]
     sent_at: Mapped[DateTimeType] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
 
     def __repr__(self):
-        return f"GlobalMessage(id={self.id}, message={self.message}, sender_id={self.sender_id}, sent_at={self.sent_at})"
+        return f"GlobalMessage(id={self.id}, message={self.text}, sender_id={self.sender_id}, sent_at={self.sent_at})"

@@ -13,5 +13,5 @@ export interface Message {
   user_id: string;
   user_name: string;
   text: string;
-  timestamp: string;
+  sent_at: string;
 }
