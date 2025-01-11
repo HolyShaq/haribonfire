@@ -29,7 +29,7 @@ export default function Message({
     >
       {show_sender ? (
         <Avatar className="h-10 w-10">
-          <AvatarImage src={avatar(user_id.toString() + user_name)} />
+          <AvatarImage src={avatar(user_name)} />
           <AvatarFallback>{user_name.slice(0, 2)}</AvatarFallback>
         </Avatar>
       ) : (
