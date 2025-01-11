@@ -31,7 +31,7 @@ export default function Bonfire() {
         setChatInput={setChatInput}
         onSend={() => {
           const messageData = {
-            user_id: user.id,
+            user_id: user.id!,
             user_name: user.name,
             text: chatInput,
             timestamp: new Date().toISOString(),
