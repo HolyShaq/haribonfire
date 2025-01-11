@@ -15,7 +15,7 @@ export function loggedInUser(): User | null {
   if (id_token) {
     const payload = jwtDecode<IDToken>(id_token)
     return {
-      id: payload.id,
+      id: payload.sub,
       name: payload.name,
       email: payload.email,
     }
