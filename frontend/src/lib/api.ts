@@ -1,5 +1,5 @@
 import { Message } from '@/common/interfaces';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const API_BASE_URL = 'localhost:8000/api/v1/'
 const HTTP_BASE_URL = `http://${API_BASE_URL}`
