@@ -17,6 +17,10 @@ class MessageResponse(MessageBase):
 class RandomConnectRequest(BaseModel):
     chat_room_id: int
 
+class RandomChatRequest(BaseModel):
+    chat_room_id: int
+    message: Message
+
 # Queue
 class QueueRequest(BaseModel):
     user_id: str

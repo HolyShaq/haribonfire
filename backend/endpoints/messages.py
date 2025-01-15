@@ -17,6 +17,7 @@ from schemas.messages import (
     Message,
     MessageResponse,
     QueueRequest,
+    RandomChatRequest,
     RandomConnectRequest,
 )
 
@@ -85,3 +86,10 @@ class RandomMessagesWebsocket(WebsocketBase):
         except ValidationError as e:
             logger.error(e)
             data = self.websocket.query_params
+
+    async def on_receive(self, data: str):
+        try:
+            request = RandomChatRequest(**json.loads(data))
+            await singletons.random_chats.send_message(request.chat_room_id, request.message, self.websocket)
+        except ValidationError as e:
+            logger.error(e)
