@@ -46,7 +46,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
           onClick={() => {
             const id = Math.floor(Math.random() * 100);
             const name = randomName();
-            setSelectedContent(<Bonfire id={id} name={name} />);
+            setSelectedContent(<Bonfire />);
           }}
         >
           <LogoSVG className="m-4 mx-0 h-8 w-8 rounded-full bg-primary p-1 text-primary-foreground transition-all group-hover:bg-stone-900 group-hover:text-primary" />
