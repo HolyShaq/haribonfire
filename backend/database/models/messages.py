@@ -45,7 +45,7 @@ class Message(Base):
     chat_room: Mapped[ChatRoom] = relationship(back_populates="messages")
 
     def __repr__(self):
-        return f"Message(id={self.id}, message={self.text}, sender_id={self.sender_id}, receiver_id={self.receiver_id}, sent_at={self.sent_at})"
+        return f"Message(id={self.id}, message={self.text}, sender_id={self.sender_id}, sent_at={self.sent_at})"
 
 class GlobalMessage(Base):
     __tablename__ = "global_messages"
