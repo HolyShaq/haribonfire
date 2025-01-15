@@ -74,6 +74,12 @@ class ChatQueue:
         await userA.websocket.send_text(payloadA)
         await userB.websocket.send_text(payloadB)
 
+    async def remove_user(self, websocket: WebSocket):
+        for queue_user in self.queue:
+            if queue_user.websocket == websocket:
+                self.queue.remove(queue_user)
+                break
+
 
 class RandomChats:
     def __init__(self):

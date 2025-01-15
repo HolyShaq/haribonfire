@@ -74,6 +74,9 @@ class QueueWebsocket(WebsocketBase):
         except ValidationError as e:
             logger.error(e)
 
+    async def on_disconnect(self):
+        await singletons.chat_queue.remove_user(self.websocket)
+
 
 @websocket(ws_router, "/random/")
 class RandomMessagesWebsocket(WebsocketBase):

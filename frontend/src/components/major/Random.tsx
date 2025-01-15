@@ -18,9 +18,9 @@ export default function Random() {
 
   useEffect(() => {
     setPageContent(<StartPage setPageContent={setPageContent} />);
-  }, [])
+  }, []);
 
-  return PageContent
+  return PageContent;
 }
 
 interface PageProps {
@@ -77,13 +77,26 @@ function MatchingPage({ setPageContent }: PageProps) {
   }, []);
 
   return (
-    <div className="flex flex-row justify-center items-center space-x-4">
-      <Loader2 className="animate-spin" />
-      <div>
-        <span className="text-3xl font-bold">Matching with a </span>
-        <span className="text-3xl font-bold text-primary">random</span>
-        <span className="text-3xl font-bold"> Haribon...</span>
+    <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-row justify-center items-center space-x-4">
+        <Loader2 className="animate-spin" />
+        <div>
+          <span className="text-3xl font-bold">Matching with a </span>
+          <span className="text-3xl font-bold text-primary">random</span>
+          <span className="text-3xl font-bold"> Haribon...</span>
+        </div>
       </div>
+
+      <Button 
+        className="mt-3 bg-primary text-primary-foreground"
+        variant="outline"
+        onClick={() => {
+          ws.current!.close();
+          setPageContent(<StartPage setPageContent={setPageContent} />);
+        }}
+      >
+        Cancel
+      </Button>
     </div>
   );
 }
