@@ -120,6 +120,7 @@ function ChattingPage({
 
   type ChatState = "chatting" | "confirmSkip" | "skipped";
   const [chatState, setChatState] = useState<ChatState>("chatting");
+  const [endNotice, setEndNotice] = useState<React.ReactNode>();
 
   useEffect(() => {
     if (ws.current == null) {
@@ -128,6 +129,12 @@ function ChattingPage({
         const response: RandomChatResponse = JSON.parse(event.data);
         if (response.response_type == "disconnect") {
           setChatState("skipped");
+          setEndNotice(
+            <div>
+              <span className="text-primary font-bold">{partnerName}</span>{" "}
+              disconnected :(
+            </div>,
+          );
         } else {
           const data: Message = response.message!;
           setMessages((prev) => [...prev, data]);
@@ -143,7 +150,7 @@ function ChattingPage({
         <span className="text-primary font-bold"> {partnerName}</span>. Say hi
         :)
       </div>
-      <MessageLog messages={messages} />
+      <MessageLog messages={messages} endNotice={endNotice} />
       <div className="flex flex-row space-x-2 w-full items-center">
         {(chatState == "chatting" || chatState == "confirmSkip") && (
           <Button
@@ -157,6 +164,7 @@ function ChattingPage({
               setChatState(chatState == "chatting" ? "confirmSkip" : "skipped");
               if (chatState == "confirmSkip") {
                 ws.current!.close();
+                setEndNotice(<div>You disconnected :(</div>);
               }
             }}
           >
