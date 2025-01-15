@@ -13,7 +13,12 @@ from pprint import pprint
 from endpoints.ws import WebsocketBase, websocket
 from endpoints import singletons
 
-from schemas.messages import Message, MessageResponse, QueueRequest, QueueResponse
+from schemas.messages import (
+    Message,
+    MessageResponse,
+    QueueRequest,
+    RandomConnectRequest,
+)
 
 
 # RESTs
@@ -67,3 +72,16 @@ class QueueWebsocket(WebsocketBase):
             await singletons.chat_queue.add_user(queue_request.user_id, self.websocket)
         except ValidationError as e:
             logger.error(e)
+
+
+@websocket(ws_router, "/random/")
+class RandomMessagesWebsocket(WebsocketBase):
+    async def on_connect(self):
+        await self.websocket.accept()
+        try:
+            data = self.websocket.query_params
+            request = RandomConnectRequest(chat_room_id=int(data["chat_room_id"]))
+            singletons.random_chats.add_user(request.chat_room_id, self.websocket)
+        except ValidationError as e:
+            logger.error(e)
+            data = self.websocket.query_params

@@ -13,6 +13,9 @@ class Message(MessageBase):
 class MessageResponse(MessageBase):
     sent_at: datetime
 
+# Random Chats
+class RandomConnectRequest(BaseModel):
+    chat_room_id: int
 
 # Queue
 class QueueRequest(BaseModel):
