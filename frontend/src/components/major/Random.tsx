@@ -87,7 +87,7 @@ function MatchingPage({ setPageContent }: PageProps) {
         </div>
       </div>
 
-      <Button 
+      <Button
         className="mt-3 bg-primary text-primary-foreground"
         variant="outline"
         onClick={() => {
@@ -116,6 +116,9 @@ function ChattingPage({
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
+  type ChatState = "chatting" | "confirmSkip" | "skipped";
+  const [chatState, setChatState] = useState<ChatState>("chatting");
+
   useEffect(() => {
     if (ws.current == null) {
       ws.current = getRandomChatWebsocket(chatRoomId!);
@@ -135,7 +138,43 @@ function ChattingPage({
       </div>
       <MessageLog messages={messages} />
       <div className="flex flex-row space-x-2 w-full items-center">
-        <Button className="bg-primary text-primary-foreground">Skip</Button>
+        {chatState == "chatting" && (
+          <Button
+            className="bg-primary text-primary-foreground"
+            onClick={() => setChatState("confirmSkip")}
+          >
+            Skip
+          </Button>
+        )}
+        {chatState == "confirmSkip" && (
+          <Button
+            className="bg-primary text-primary-foreground"
+            onClick={() => setChatState("skipped")}
+          >
+            Really?
+          </Button>
+        )}
+        {chatState == "skipped" && (
+          <Button
+            className="bg-primary text-primary-foreground"
+            onClick={() =>
+              setPageContent(<StartPage setPageContent={setPageContent} />)
+            }
+          >
+            Back
+          </Button>
+        )}
+        {chatState == "skipped" && (
+          <Button
+            className="bg-primary text-primary-foreground"
+            onClick={() =>
+              setPageContent(<MatchingPage setPageContent={setPageContent} />)
+            }
+          >
+            New
+          </Button>
+        )}
+
         <ChatInput
           chatInput={chatInput}
           setChatInput={setChatInput}
