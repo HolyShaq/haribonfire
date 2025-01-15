@@ -36,3 +36,19 @@ export function getGlobalWebsocket(
   };
   return ws;
 }
+
+export function getQueueWebsocket(user_id: string) {
+  const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/queue/");
+  ws.onerror = (event) => {
+    console.log(event);
+  };
+  ws.onopen = () => {
+    console.log("Connected to queue websocket");
+    ws.send(
+      JSON.stringify({
+        user_id: user_id,
+      }),
+    );
+  };
+  return ws;
+}
