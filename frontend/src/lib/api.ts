@@ -30,8 +30,7 @@ export function getGlobalWebsocket(
     console.log("Connected to global websocket");
   };
   ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log(data, typeof data);
+    const data: Message = JSON.parse(event.data);
     setMessages((prev) => [...prev, data]);
   };
   return ws;
