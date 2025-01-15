@@ -209,12 +209,8 @@ function ChattingPage({
               // Local append
               setMessages((prev) => [...prev, messageData]);
 
-              const payload = {
-                chat_room_id: chatRoomId!,
-                message: messageData,
-              };
-              // Broadcast message to websocket
-              ws.current?.send(JSON.stringify(payload));
+              // Send message to websocket
+              ws.current?.send(JSON.stringify(messageData));
               setChatInput("");
             }}
           />

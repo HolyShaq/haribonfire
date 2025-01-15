@@ -95,9 +95,9 @@ class RandomMessagesWebsocket(WebsocketBase):
 
     async def on_receive(self, data: str):
         try:
-            request = RandomChatRequest(**json.loads(data))
-            await singletons.random_chats.send_message(request.chat_room_id, request.message, self.websocket)
-            create_message(request.chat_room_id, request.message)
+            message = Message(**json.loads(data))
+            await singletons.random_chats.send_message(self.chat_room_id, message, self.websocket)
+            create_message(self.chat_room_id, message)
         except ValidationError as e:
             logger.error(e)
 
