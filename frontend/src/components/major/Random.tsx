@@ -62,6 +62,7 @@ function MatchingPage({ setPageState }: PageProps) {
         if (data.chat_room_id) {
           setPageState("chatting");
         }
+        ws.current!.close();
       };
     }
   }, []);

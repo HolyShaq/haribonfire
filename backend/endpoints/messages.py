@@ -116,10 +116,7 @@ class ChatQueue:
         payload = json.dumps(response.model_dump())
 
         await userA.websocket.send_text(payload)
-        await userA.websocket.close()
-
         await userB.websocket.send_text(payload)
-        await userA.websocket.close()
 
 
 chat_queue = ChatQueue()
