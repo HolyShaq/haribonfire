@@ -14,29 +14,20 @@ import ChatInput from "../ChatInput";
 type PageState = "start" | "matching" | "chatting";
 
 export default function Random() {
-  const [pageState, setPageState] = useState<PageState>("start");
-  const [chatRoomId, setChatRoomId] = useState<number>();
+  const [PageContent, setPageContent] = useState<React.ReactNode>();
 
-  const pages = {
-    start: <StartPage setPageState={setPageState} />,
-    matching: (
-      <MatchingPage setPageState={setPageState} setChatRoomId={setChatRoomId} />
-    ),
-    chatting: (
-      <ChattingPage setPageState={setPageState} chatRoomId={chatRoomId} />
-    ),
-  };
+  useEffect(() => {
+    setPageContent(<StartPage setPageContent={setPageContent} />);
+  }, [])
 
-  return pages[pageState];
+  return PageContent
 }
 
 interface PageProps {
-  setPageState: (pageState: PageState) => void;
-  chatRoomId?: number;
-  setChatRoomId?: (chatRoomId: number) => void;
+  setPageContent: React.Dispatch<React.SetStateAction<React.ReactNode>>;
 }
 
-function StartPage({ setPageState }: PageProps) {
+function StartPage({ setPageContent }: PageProps) {
   return (
     <div className="flex flex-col justify-center items-center">
       <div>
@@ -53,7 +44,9 @@ function StartPage({ setPageState }: PageProps) {
       <Button
         className="mt-3 bg-primary text-primary-foreground"
         variant="outline"
-        onClick={() => setPageState("matching")}
+        onClick={() =>
+          setPageContent(<MatchingPage setPageContent={setPageContent} />)
+        }
       >
         Let's go!
       </Button>
@@ -61,7 +54,7 @@ function StartPage({ setPageState }: PageProps) {
   );
 }
 
-function MatchingPage({ setPageState, setChatRoomId }: PageProps) {
+function MatchingPage({ setPageContent }: PageProps) {
   const ws = useRef<WebSocket>(null);
   const user = loggedInUser()!;
   useEffect(() => {
@@ -70,8 +63,13 @@ function MatchingPage({ setPageState, setChatRoomId }: PageProps) {
       ws.current.onmessage = (event) => {
         const data: QueueResponse = JSON.parse(event.data);
         if (data.chat_room_id) {
-          setPageState("chatting");
-          setChatRoomId!(data.chat_room_id);
+          setPageContent(
+            <ChattingPage
+              setPageContent={setPageContent}
+              chatRoomId={data.chat_room_id}
+              partnerName={"hahaha"}
+            />,
+          );
         }
         ws.current!.close();
       };
@@ -90,7 +88,15 @@ function MatchingPage({ setPageState, setChatRoomId }: PageProps) {
   );
 }
 
-function ChattingPage({ setPageState, chatRoomId }: PageProps) {
+interface ChattingPageProps extends PageProps {
+  chatRoomId: number;
+  partnerName: string;
+}
+function ChattingPage({
+  setPageContent,
+  chatRoomId,
+  partnerName,
+}: ChattingPageProps) {
   const user = loggedInUser()!;
   const ws = useRef<WebSocket>(null);
 
@@ -111,7 +117,8 @@ function ChattingPage({ setPageState, chatRoomId }: PageProps) {
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
       <div className="text-muted-foreground mb-[-15px] ml-4">
         You've been matched with
-        <span className="text-primary font-bold"> {user.name}</span>. Say hi :)
+        <span className="text-primary font-bold"> {partnerName}</span>. Say hi
+        :)
       </div>
       <MessageLog messages={messages} />
       <div className="flex flex-row space-x-2 w-full items-center">
