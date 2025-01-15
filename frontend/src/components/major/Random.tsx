@@ -164,24 +164,25 @@ function ChattingPage({
           </Button>
         )}
         {chatState == "skipped" && (
-          <Button
-            className="bg-muted text-muted-foreground h-full hover:bg-muted"
-            onClick={() =>
-              setPageContent(<StartPage setPageContent={setPageContent} />)
-            }
-          >
-            Back
-          </Button>
-        )}
-        {chatState == "skipped" && (
-          <Button
-            className="bg-primary text-primary-foreground h-full"
-            onClick={() =>
-              setPageContent(<MatchingPage setPageContent={setPageContent} />)
-            }
-          >
-            New
-          </Button>
+          <>
+            <Button
+              className="bg-muted text-muted-foreground h-full hover:bg-muted"
+              onClick={() =>
+                setPageContent(<StartPage setPageContent={setPageContent} />)
+              }
+            >
+              Back
+            </Button>
+
+            <Button
+              className="bg-primary text-primary-foreground h-full"
+              onClick={() =>
+                setPageContent(<MatchingPage setPageContent={setPageContent} />)
+              }
+            >
+              New
+            </Button>
+          </>
         )}
 
         <div
