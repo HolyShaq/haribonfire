@@ -19,19 +19,13 @@ export async function getGlobalMessages() {
 }
 
 // Websockets
-export function getGlobalWebsocket(
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-) {
+export function getGlobalWebsocket() {
   const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/global/");
   ws.onerror = (event) => {
     console.log(event);
   };
   ws.onopen = () => {
     console.log("Connected to global websocket");
-  };
-  ws.onmessage = (event) => {
-    const data: Message = JSON.parse(event.data);
-    setMessages((prev) => [...prev, data]);
   };
   return ws;
 }

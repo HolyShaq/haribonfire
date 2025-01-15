@@ -16,7 +16,11 @@ export default function Bonfire() {
   useEffect(() => {
     // Initialize websocket connection
     if (ws.current == null) {
-      ws.current = getGlobalWebsocket(setMessages);
+      ws.current = getGlobalWebsocket();
+      ws.current.onmessage = (event) => {
+        const data: Message = JSON.parse(event.data);
+        setMessages((prev) => [...prev, data]);
+      }
     }
 
     // Fetch global messages
