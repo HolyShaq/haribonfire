@@ -19,7 +19,7 @@ class WebsocketBase:
     def __init__(self, websocket: WebSocket):
         self.websocket = websocket
 
-    async def on_connect(self):
+    async def on_connect(self, data: str | None = None):
         pass
 
     async def on_receive(self, data):

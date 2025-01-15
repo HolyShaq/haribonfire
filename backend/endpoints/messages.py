@@ -1,9 +1,11 @@
+from dataclasses import dataclass
 import json
-from pydantic import ValidationError
+from pydantic import ValidationError, WebsocketUrl
 from fastapi import APIRouter, Depends, WebSocket
+from fastapi_utils.tasks import repeat_every
 from sqlalchemy.orm import Session
 
-from database.controllers.messages import create_global_message
+from database.controllers.messages import create_chat_room, create_global_message
 from database.db import get_database_session
 from database.models.messages import GlobalMessage
 from database.models.users import User
@@ -12,7 +14,7 @@ from pprint import pprint
 
 from endpoints.ws import WebsocketBase, websocket
 
-from schemas.messages import Message, MessageResponse
+from schemas.messages import Message, MessageResponse, QueueRequest, QueueResponse
 
 
 # RESTs
@@ -23,12 +25,15 @@ router = APIRouter(prefix="/messages", tags=["messages"])
 def get_global_messages(session: Session = Depends(get_database_session)):
     messages = session.query(GlobalMessage).all()
 
-    return [MessageResponse(
-        user_id=message.sender_id,
-        user_name=message.user.name,
-        text=message.text,
-        sent_at=message.sent_at
-    ).model_dump() for message in messages]
+    return [
+        MessageResponse(
+            user_id=message.sender_id,
+            user_name=message.user.name,
+            text=message.text,
+            sent_at=message.sent_at,
+        ).model_dump()
+        for message in messages
+    ]
 
 
 # Websockets
@@ -81,3 +86,53 @@ class GlobalMessagesWebsocket(WebsocketBase):
 
     async def on_disconnect(self):
         global_pool.disconnect(self.websocket)
+
+
+@dataclass
+class ChatQueueUser:
+    user_id: str
+    websocket: WebSocket
+
+
+class ChatQueue:
+    def __init__(self) -> None:
+        self.queue: list[ChatQueueUser] = []
+
+    async def add_user(self, user_id: str, websocket: WebSocket):
+        self.queue.append(ChatQueueUser(user_id, websocket))
+        await self.check_match()
+
+    async def check_match(self):
+        if len(self.queue) >= 2:
+            userA = self.queue.pop(0)
+            userB = self.queue.pop(0)
+            chat_room = create_chat_room(userA.user_id, userB.user_id)
+            await self.match(userA, userB, chat_room.id)
+
+    async def match(
+        self, userA: ChatQueueUser, userB: ChatQueueUser, chat_room_id: int
+    ):
+        response = QueueResponse(chat_room_id=chat_room_id)
+        payload = json.dumps(response.model_dump())
+
+        await userA.websocket.send_text(payload)
+        await userA.websocket.close()
+
+        await userB.websocket.send_text(payload)
+        await userA.websocket.close()
+
+
+chat_queue = ChatQueue()
+
+
+@websocket(ws_router, "/queue/")
+class QueueWebsocket(WebsocketBase):
+    async def on_connect(self):
+        await self.websocket.accept()
+
+    async def on_receive(self, data: str):
+        try:
+            queue_request = QueueRequest(**json.loads(data))
+            await chat_queue.add_user(queue_request.user_id, self.websocket)
+        except ValidationError as e:
+            logger.error(e)
