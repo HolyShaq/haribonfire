@@ -3,7 +3,7 @@
 import { Message, QueueResponse } from "@/common/interfaces";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getQueueWebsocket } from "@/lib/api";
+import { getQueueWebsocket, getRandomChatWebsocket } from "@/lib/api";
 import { loggedInUser } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -15,11 +15,16 @@ type PageState = "start" | "matching" | "chatting";
 
 export default function Random() {
   const [pageState, setPageState] = useState<PageState>("start");
+  const [chatRoomId, setChatRoomId] = useState<number>();
 
   const pages = {
     start: <StartPage setPageState={setPageState} />,
-    matching: <MatchingPage setPageState={setPageState} />,
-    chatting: <ChattingPage setPageState={setPageState} />,
+    matching: (
+      <MatchingPage setPageState={setPageState} setChatRoomId={setChatRoomId} />
+    ),
+    chatting: (
+      <ChattingPage setPageState={setPageState} chatRoomId={chatRoomId} />
+    ),
   };
 
   return pages[pageState];
@@ -27,6 +32,8 @@ export default function Random() {
 
 interface PageProps {
   setPageState: (pageState: PageState) => void;
+  chatRoomId?: number;
+  setChatRoomId?: (chatRoomId: number) => void;
 }
 
 function StartPage({ setPageState }: PageProps) {
@@ -54,7 +61,7 @@ function StartPage({ setPageState }: PageProps) {
   );
 }
 
-function MatchingPage({ setPageState }: PageProps) {
+function MatchingPage({ setPageState, setChatRoomId }: PageProps) {
   const ws = useRef<WebSocket>(null);
   const user = loggedInUser()!;
   useEffect(() => {
@@ -64,6 +71,7 @@ function MatchingPage({ setPageState }: PageProps) {
         const data: QueueResponse = JSON.parse(event.data);
         if (data.chat_room_id) {
           setPageState("chatting");
+          setChatRoomId!(data.chat_room_id);
         }
         ws.current!.close();
       };
@@ -82,10 +90,23 @@ function MatchingPage({ setPageState }: PageProps) {
   );
 }
 
-function ChattingPage({ setPageState }: PageProps) {
+function ChattingPage({ setPageState, chatRoomId }: PageProps) {
   const user = loggedInUser()!;
+  const ws = useRef<WebSocket>(null);
+
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    if (ws.current == null) {
+      ws.current = getRandomChatWebsocket(chatRoomId!);
+      ws.current.onmessage = (event) => {
+        const data: Message = JSON.parse(event.data);
+        setMessages((prev) => [...prev, data]);
+      };
+    }
+  }, []);
+
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
       <div className="text-muted-foreground mb-[-15px] ml-4">
@@ -94,10 +115,7 @@ function ChattingPage({ setPageState }: PageProps) {
       </div>
       <MessageLog messages={messages} />
       <div className="flex flex-row space-x-2 w-full items-center">
-        <Button
-          className="bg-primary text-primary-foreground">
-          Skip
-        </Button>
+        <Button className="bg-primary text-primary-foreground">Skip</Button>
         <ChatInput
           chatInput={chatInput}
           setChatInput={setChatInput}
@@ -112,8 +130,12 @@ function ChattingPage({ setPageState }: PageProps) {
             // Local append
             setMessages((prev) => [...prev, messageData]);
 
+            const payload = {
+              chat_room_id: chatRoomId!,
+              message: messageData,
+            };
             // Broadcast message to websocket
-            //ws.current?.send(JSON.stringify(messageData));
+            ws.current?.send(JSON.stringify(payload));
             setChatInput("");
           }}
         />

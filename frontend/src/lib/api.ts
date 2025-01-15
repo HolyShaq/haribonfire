@@ -40,3 +40,14 @@ export function getQueueWebsocket(user_id: string) {
   };
   return ws;
 }
+
+export function getRandomChatWebsocket(chat_room_id: number) {
+  const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/random/" + `?chat_room_id=${chat_room_id}`)
+  ws.onerror = (event) => {
+    console.log(event);
+  };
+  ws.onopen = () => {
+    console.log(`Connected to random chat room ${chat_room_id}`);
+  };
+  return ws;
+}
