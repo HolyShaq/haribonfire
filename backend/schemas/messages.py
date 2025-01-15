@@ -27,3 +27,4 @@ class QueueRequest(BaseModel):
 
 class QueueResponse(BaseModel):
     chat_room_id: int
+    partner_name: str
