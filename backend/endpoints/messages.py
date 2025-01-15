@@ -3,7 +3,7 @@ from pydantic import ValidationError
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from database.controllers.messages import create_global_message
+from database.controllers.messages import create_global_message, create_message
 from database.db import get_database_session
 from database.models.messages import GlobalMessage
 from database.models.users import User
@@ -91,5 +91,6 @@ class RandomMessagesWebsocket(WebsocketBase):
         try:
             request = RandomChatRequest(**json.loads(data))
             await singletons.random_chats.send_message(request.chat_room_id, request.message, self.websocket)
+            create_message(request.chat_room_id, request.message)
         except ValidationError as e:
             logger.error(e)

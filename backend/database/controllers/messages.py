@@ -2,7 +2,7 @@ from datetime import datetime
 from database.core.enums import ChatRoomStatus, ChatRoomType
 from database.db import Session
 from schemas.messages import Message
-from database.models.messages import ChatRoom, GlobalMessage
+from database.models.messages import ChatRoom, GlobalMessage, Message as MessageModel
 from logs import logger
 
 
@@ -19,6 +19,20 @@ def create_global_message(message: Message):
         logger.info(f"Created global message: {message}")
 
 
+def create_message(chat_room_id: int, message: Message):
+    with Session() as session:
+        message = MessageModel(
+            chat_room_id=chat_room_id,
+            sender_id=message.user_id,
+            text=message.text,
+            sent_at=datetime.fromisoformat(message.sent_at),
+        )
+        session.add(message)
+        session.commit()
+
+        logger.info(f"Created chat message: {message}")
+
+
 def create_chat_room(userA_id: str, userB_id: str):
     with Session() as session:
         chat_room = ChatRoom(
@@ -30,16 +44,6 @@ def create_chat_room(userA_id: str, userB_id: str):
         session.add(chat_room)
         session.commit()
         session.refresh(chat_room)
-        
+
         logger.info(f"Created chat room with id {chat_room.id}")
         return chat_room
-
-
-
-
-
-
-
-
-
-
