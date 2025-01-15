@@ -31,16 +31,12 @@ export function getGlobalWebsocket() {
 }
 
 export function getQueueWebsocket(user_id: string) {
-  const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/queue/");
+  const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/queue/" + `?user_id=${user_id}`);
   ws.onerror = (event) => {
     console.log(event);
   };
   ws.onopen = () => {
     console.log("Connected to queue websocket");
-    const payload: QueueRequest = {
-      user_id: user_id,
-    };
-    ws.send(JSON.stringify(payload));
   };
   return ws;
 }

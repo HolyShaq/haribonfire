@@ -61,10 +61,9 @@ class GlobalMessagesWebsocket(WebsocketBase):
 class QueueWebsocket(WebsocketBase):
     async def on_connect(self):
         await self.websocket.accept()
-
-    async def on_receive(self, data: str):
         try:
-            queue_request = QueueRequest(**json.loads(data))
+            data = self.websocket.query_params
+            queue_request = QueueRequest(**data)
             await singletons.chat_queue.add_user(queue_request.user_id, self.websocket)
         except ValidationError as e:
             logger.error(e)
