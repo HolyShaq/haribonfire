@@ -71,7 +71,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
         defaultValue="friends"
         className="w-full flex-grow rounded-md bg-neutral-300 dark:bg-neutral-800"
       >
-        <TabsList className="mb-1 flex w-full justify-evenly">
+        <TabsList className="mb-1 flex w-full justify-evenly bg-neutral-300 dark:bg-neutral-800">
           <TabsTrigger
             className="m-1 w-full transition-all hover:bg-stone-400 data-[state=active]:bg-primary data-[state=active]:text-black dark:hover:bg-stone-700 dark:data-[state=active]:bg-primary dark:data-[state=active]:text-black"
             value="friends"
