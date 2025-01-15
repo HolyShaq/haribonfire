@@ -15,9 +15,6 @@ import MessageLog from "../MessageLog";
 import ChatInput from "../ChatInput";
 import { cn } from "@/lib/utils";
 
-// Page States
-type PageState = "start" | "matching" | "chatting";
-
 export default function Random() {
   const [PageContent, setPageContent] = useState<React.ReactNode>();
 
