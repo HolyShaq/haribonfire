@@ -65,6 +65,20 @@ class ChatQueue:
         await userB.websocket.send_text(payload)
 
 
+class RandomChats:
+    def __init__(self):
+        self.chat_rooms: dict[int, list[WebSocket]] = {}
+
+    def add_user(self, chat_room_id: int, websocket: WebSocket):
+        self.chat_rooms.setdefault(chat_room_id, []).append(websocket)
+
+    async def send_message(self, chat_room_id: int, message: Message, sender: WebSocket):
+        for connection in self.chat_rooms[chat_room_id]:
+            if connection != sender:
+                payload = json.dumps(message.model_dump())
+                await connection.send_text(payload)
+
 # Instances
 global_pool = GlobalPool()
 chat_queue = ChatQueue()
+random_chats = RandomChats()
