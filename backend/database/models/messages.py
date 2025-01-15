@@ -37,7 +37,6 @@ class Message(Base):
     chat_room_id: Mapped[int] = mapped_column(ForeignKey("chat_rooms.id"))
     text: Mapped[str]
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    receiver_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
     sent_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
