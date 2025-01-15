@@ -83,7 +83,7 @@ function MatchingPage({ setPageContent }: PageProps) {
       <div className="flex flex-row justify-center items-center space-x-4">
         <Loader2 className="animate-spin" />
         <div>
-          <span className="text-3xl font-bold">Matching with a </span>
+          <span className="text-3xl font-bold">Looking for a </span>
           <span className="text-3xl font-bold text-primary">random</span>
           <span className="text-3xl font-bold"> Haribon...</span>
         </div>
