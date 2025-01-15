@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from database.controllers.users import get_user
+from database.controllers.users import get_user, get_username
 from database.db import Session
 from logs import logger
 from fastapi import WebSocket
@@ -60,12 +60,13 @@ class ChatQueue:
     async def match(
         self, userA: ChatQueueUser, userB: ChatQueueUser, chat_room_id: int
     ):
+        # Get names of users
         with Session() as session:
-            nameA = get_user(userA.user_id, session)
-            nameB = get_user(userB.user_id, session)
+            nameA = get_username(userA.user_id, session)
+            nameB = get_username(userB.user_id, session)
 
-        responseA = QueueResponse(chat_room_id=chat_room_id, partner_name=nameA)
-        responseB = QueueResponse(chat_room_id=chat_room_id, partner_name=nameB)
+        responseA = QueueResponse(chat_room_id=chat_room_id, partner_name=str(nameB))
+        responseB = QueueResponse(chat_room_id=chat_room_id, partner_name=str(nameA))
 
         payloadA = json.dumps(responseA.model_dump())
         payloadB = json.dumps(responseB.model_dump())
@@ -81,11 +82,14 @@ class RandomChats:
     def add_user(self, chat_room_id: int, websocket: WebSocket):
         self.chat_rooms.setdefault(chat_room_id, []).append(websocket)
 
-    async def send_message(self, chat_room_id: int, message: Message, sender: WebSocket):
+    async def send_message(
+        self, chat_room_id: int, message: Message, sender: WebSocket
+    ):
         for connection in self.chat_rooms[chat_room_id]:
             if connection != sender:
                 payload = json.dumps(message.model_dump())
                 await connection.send_text(payload)
+
 
 # Instances
 global_pool = GlobalPool()

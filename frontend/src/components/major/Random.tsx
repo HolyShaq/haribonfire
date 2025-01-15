@@ -67,7 +67,7 @@ function MatchingPage({ setPageContent }: PageProps) {
             <ChattingPage
               setPageContent={setPageContent}
               chatRoomId={data.chat_room_id}
-              partnerName={"hahaha"}
+              partnerName={data.partner_name}
             />,
           );
         }

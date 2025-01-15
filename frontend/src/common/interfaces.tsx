@@ -22,4 +22,5 @@ export interface QueueRequest {
 
 export interface QueueResponse {
   chat_room_id: number;
+  partner_name: string;
 }
