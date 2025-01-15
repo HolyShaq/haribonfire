@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import MessageLog from "../MessageLog";
 import ChatInput from "../ChatInput";
+import { cn } from "@/lib/utils";
 
 // Page States
 type PageState = "start" | "matching" | "chatting";
@@ -138,25 +139,24 @@ function ChattingPage({
       </div>
       <MessageLog messages={messages} />
       <div className="flex flex-row space-x-2 w-full items-center">
-        {chatState == "chatting" && (
+        {(chatState == "chatting" || chatState == "confirmSkip") && (
           <Button
-            className="bg-primary text-primary-foreground"
-            onClick={() => setChatState("confirmSkip")}
+            className={cn(
+              "transition-all h-full",
+              chatState == "chatting" && "bg-primary text-primary-foreground",
+              chatState == "confirmSkip" &&
+                "bg-red-600 text-white hover:bg-red-700",
+            )}
+            onClick={() => {
+              setChatState(chatState == "chatting" ? "confirmSkip" : "skipped");
+            }}
           >
-            Skip
-          </Button>
-        )}
-        {chatState == "confirmSkip" && (
-          <Button
-            className="bg-primary text-primary-foreground"
-            onClick={() => setChatState("skipped")}
-          >
-            Really?
+            {chatState == "chatting" ? "Skip" : "Really?"}
           </Button>
         )}
         {chatState == "skipped" && (
           <Button
-            className="bg-primary text-primary-foreground"
+            className="bg-muted text-muted-foreground h-full hover:bg-muted"
             onClick={() =>
               setPageContent(<StartPage setPageContent={setPageContent} />)
             }
@@ -166,7 +166,7 @@ function ChattingPage({
         )}
         {chatState == "skipped" && (
           <Button
-            className="bg-primary text-primary-foreground"
+            className="bg-primary text-primary-foreground h-full"
             onClick={() =>
               setPageContent(<MatchingPage setPageContent={setPageContent} />)
             }
@@ -175,29 +175,38 @@ function ChattingPage({
           </Button>
         )}
 
-        <ChatInput
-          chatInput={chatInput}
-          setChatInput={setChatInput}
-          onSend={() => {
-            const messageData = {
-              user_id: user.id!,
-              user_name: user.name,
-              text: chatInput,
-              sent_at: new Date().toISOString(),
-            };
-
-            // Local append
-            setMessages((prev) => [...prev, messageData]);
-
-            const payload = {
-              chat_room_id: chatRoomId!,
-              message: messageData,
-            };
-            // Broadcast message to websocket
-            ws.current?.send(JSON.stringify(payload));
-            setChatInput("");
+        <div
+          onClick={() => {
+            if (chatState != "skipped") {
+              setChatState("chatting");
+            }
           }}
-        />
+          className="w-full"
+        >
+          <ChatInput
+            chatInput={chatInput}
+            setChatInput={setChatInput}
+            onSend={() => {
+              const messageData = {
+                user_id: user.id!,
+                user_name: user.name,
+                text: chatInput,
+                sent_at: new Date().toISOString(),
+              };
+
+              // Local append
+              setMessages((prev) => [...prev, messageData]);
+
+              const payload = {
+                chat_room_id: chatRoomId!,
+                message: messageData,
+              };
+              // Broadcast message to websocket
+              ws.current?.send(JSON.stringify(payload));
+              setChatInput("");
+            }}
+          />
+        </div>
       </div>
     </div>
   );
