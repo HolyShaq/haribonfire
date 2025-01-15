@@ -24,3 +24,8 @@ export interface QueueResponse {
   chat_room_id: number;
   partner_name: string;
 }
+
+export interface RandomChatResponse {
+  response_type: "message" | "disconnect";
+  message?: Message;
+}

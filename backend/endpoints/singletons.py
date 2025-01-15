@@ -6,7 +6,7 @@ from logs import logger
 from fastapi import WebSocket
 
 from database.controllers.messages import create_chat_room
-from schemas.messages import Message, QueueResponse
+from schemas.messages import Message, QueueResponse, RandomChatResponse
 
 
 class GlobalPool:
@@ -93,8 +93,22 @@ class RandomChats:
     ):
         for connection in self.chat_rooms[chat_room_id]:
             if connection != sender:
-                payload = json.dumps(message.model_dump())
+                response = RandomChatResponse(response_type="message", message=message)
+                payload = json.dumps(response.model_dump())
                 await connection.send_text(payload)
+
+    async def disconnect(self, chat_room_id: int, websocket: WebSocket):
+        room = self.chat_rooms.get(chat_room_id)
+        if room:
+            room.remove(websocket)
+
+            response = RandomChatResponse(response_type="disconnect")
+            payload = json.dumps(response.model_dump())
+            other = self.chat_rooms[chat_room_id][0]
+            await other.send_text(payload)
+            await other.close()
+
+            del self.chat_rooms[chat_room_id]
 
 
 # Instances

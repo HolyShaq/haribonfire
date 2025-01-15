@@ -1,6 +1,10 @@
 "use client";
 
-import { Message, QueueResponse } from "@/common/interfaces";
+import {
+  Message,
+  QueueResponse,
+  RandomChatResponse,
+} from "@/common/interfaces";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getQueueWebsocket, getRandomChatWebsocket } from "@/lib/api";
@@ -124,8 +128,13 @@ function ChattingPage({
     if (ws.current == null) {
       ws.current = getRandomChatWebsocket(chatRoomId!);
       ws.current.onmessage = (event) => {
-        const data: Message = JSON.parse(event.data);
-        setMessages((prev) => [...prev, data]);
+        const response: RandomChatResponse = JSON.parse(event.data);
+        if (response.response_type == "disconnect") {
+          setChatState("skipped");
+        } else {
+          const data: Message = response.message!;
+          setMessages((prev) => [...prev, data]);
+        }
       };
     }
   }, []);
@@ -149,6 +158,9 @@ function ChattingPage({
             )}
             onClick={() => {
               setChatState(chatState == "chatting" ? "confirmSkip" : "skipped");
+              if (chatState == "confirmSkip") {
+                ws.current!.close();
+              }
             }}
           >
             {chatState == "chatting" ? "Skip" : "Really?"}

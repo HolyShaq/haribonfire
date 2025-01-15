@@ -80,11 +80,14 @@ class QueueWebsocket(WebsocketBase):
 
 @websocket(ws_router, "/random/")
 class RandomMessagesWebsocket(WebsocketBase):
+    chat_room_id: int
+
     async def on_connect(self):
         await self.websocket.accept()
         try:
             data = self.websocket.query_params
             request = RandomConnectRequest(chat_room_id=int(data["chat_room_id"]))
+            self.chat_room_id = request.chat_room_id
             singletons.random_chats.add_user(request.chat_room_id, self.websocket)
         except ValidationError as e:
             logger.error(e)
@@ -97,3 +100,6 @@ class RandomMessagesWebsocket(WebsocketBase):
             create_message(request.chat_room_id, request.message)
         except ValidationError as e:
             logger.error(e)
+
+    async def on_disconnect(self):
+        await singletons.random_chats.disconnect(self.chat_room_id, self.websocket)

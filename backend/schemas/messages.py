@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal, Optional
 from pydantic import BaseModel
 
 # Message
@@ -20,6 +21,10 @@ class RandomConnectRequest(BaseModel):
 class RandomChatRequest(BaseModel):
     chat_room_id: int
     message: Message
+
+class RandomChatResponse(BaseModel):
+    response_type: Literal["message", "disconnect"]
+    message: Optional[Message] = None
 
 # Queue
 class QueueRequest(BaseModel):
