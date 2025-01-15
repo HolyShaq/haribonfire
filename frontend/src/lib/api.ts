@@ -1,4 +1,4 @@
-import { Message } from "@/common/interfaces";
+import { Message, QueueRequest } from "@/common/interfaces";
 import axios from "axios";
 
 const API_BASE_URL = "localhost:8000/api/v1/";
@@ -44,11 +44,10 @@ export function getQueueWebsocket(user_id: string) {
   };
   ws.onopen = () => {
     console.log("Connected to queue websocket");
-    ws.send(
-      JSON.stringify({
-        user_id: user_id,
-      }),
-    );
+    const payload: QueueRequest = {
+      user_id: user_id,
+    };
+    ws.send(JSON.stringify(payload));
   };
   return ws;
 }

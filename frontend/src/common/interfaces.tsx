@@ -15,3 +15,11 @@ export interface Message {
   text: string;
   sent_at: string;
 }
+
+export interface QueueRequest {
+  user_id: string;
+}
+
+export interface QueueResponse {
+  chat_room_id: number;
+}

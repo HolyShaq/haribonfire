@@ -1,5 +1,6 @@
 "use client";
 
+import { QueueResponse } from "@/common/interfaces";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getQueueWebsocket } from "@/lib/api";
@@ -58,7 +59,7 @@ function MatchingPage({ setPageState }: PageProps) {
     if (ws.current == null) {
       ws.current = getQueueWebsocket(user.id!);
       ws.current.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+        const data: QueueResponse = JSON.parse(event.data);
         if (data.chat_room_id) {
           setPageState("chatting");
         }
