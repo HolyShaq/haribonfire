@@ -13,6 +13,7 @@ export interface IDToken extends User, JwtPayload {}
 export interface Message {
   user_id: string;
   user_name: string;
+  avatar_seed: string;
   text: string;
   sent_at: string;
 }

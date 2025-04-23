@@ -34,6 +34,7 @@ def get_global_messages(session: Session = Depends(get_database_session)):
         MessageResponse(
             user_id=message.sender_id,
             user_name=message.user.name,
+            avatar_seed=message.user.avatar_seed,
             text=message.text,
             sent_at=message.sent_at,
         ).model_dump()

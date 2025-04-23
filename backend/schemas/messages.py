@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class MessageBase(BaseModel):
     user_id: str
     user_name: str
+    avatar_seed: str
     text: str
 
 class Message(MessageBase):
