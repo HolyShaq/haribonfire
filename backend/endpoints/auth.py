@@ -1,4 +1,6 @@
 import os
+import random
+import string
 import httpx
 import urllib.parse
 from jose import jwt, JWTError
@@ -60,6 +62,12 @@ async def decrypt_id_token(id_token: str) -> User:
         email=payload["email"],
     )
 
+def generate_avatar_seed():
+    """
+    Generates a random 10-character string.
+    """
+    return "".join(random.choices(string.ascii_letters + string.digits, k=10))
+
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -103,6 +111,10 @@ async def login_callback(
     id_token = form_data.get("id_token")
     payload = await decrypt_id_token(str(id_token))
 
+    # Random avatar seed
+    payload.avatar_seed = generate_avatar_seed()
+
+    # Create user record
     create_user(payload, session)
 
     # Construct response
@@ -135,17 +147,20 @@ async def fake_login(id: str, name: str, email: str, session: Session = Depends(
 
     user = session.query(User).filter_by(id=id).first()
     if user is None:
+        avatar_seed = generate_avatar_seed()
         payload = {
             "sub": id,
             "name": name,
-            "email": email
+            "email": email,
+            "avatar_seed": avatar_seed,
         }
-        create_user(User(id=id, name=name, email=email), session)
+        create_user(User(id=id, name=name, email=email, avatar_seed=avatar_seed), session)
     else:
         payload = {
             "sub": user.id,
             "name": user.name,
-            "email": user.email
+            "email": user.email,
+            "avatar_seed": user.avatar_seed
         }
 
     id_token = jwt.encode(payload, "test", algorithm="HS256")
