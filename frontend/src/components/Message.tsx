@@ -1,6 +1,7 @@
 import { avatar, cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Message as MessageInterface} from "@/common/interfaces";
+import { Message as MessageInterface } from "@/common/interfaces";
+import HaribonAvatar from "./HaribonAvatar";
 
 export interface MessageProps extends MessageInterface {
   show_sender?: boolean;
@@ -10,16 +11,17 @@ export interface MessageProps extends MessageInterface {
 export default function Message({
   user_id,
   user_name,
+  avatar_seed,
   text,
   sent_at,
   show_sender = true,
 }: MessageProps) {
   const datetimeFormat = new Intl.DateTimeFormat("default", {
-    "hour": "numeric",
-    "minute": "numeric",
-  })
+    hour: "numeric",
+    minute: "numeric",
+  });
   const datetime = new Date(sent_at);
-  const timestampString = datetimeFormat.format(datetime)
+  const timestampString = datetimeFormat.format(datetime);
   return (
     <div
       className={cn(
@@ -28,10 +30,7 @@ export default function Message({
       )}
     >
       {show_sender ? (
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={avatar(user_name)} />
-          <AvatarFallback>{user_name.slice(0, 2)}</AvatarFallback>
-        </Avatar>
+        <HaribonAvatar name={user_name} avatar_seed={avatar_seed} />
       ) : (
         <div className="h-10 w-10" />
       )}
@@ -39,9 +38,7 @@ export default function Message({
       <div className="flex flex-col items-start justify-end space-y-2">
         {show_sender && (
           <div className="flex flex-row items-end justify-end space-x-2">
-            <span className="font-semibold leading-none">
-              {user_name}
-            </span>
+            <span className="font-semibold leading-none">{user_name}</span>
             <span className="text-xs leading-none text-muted-foreground">
               {timestampString}
             </span>
