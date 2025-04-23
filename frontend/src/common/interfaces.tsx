@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   course?: string;
+  avatar_seed: string;
 }
 
 export interface IDToken extends User, JwtPayload {}

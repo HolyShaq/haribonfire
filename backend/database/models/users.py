@@ -35,6 +35,7 @@ class User(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]
     email: Mapped[str]
+    avatar_seed: Mapped[str]
     course: Mapped[Optional[str]]
 
     # Relationships
@@ -50,7 +51,7 @@ class User(Base):
     )
 
     def __repr__(self):
-        return f"User(id={self.id}, name={self.name}, email={self.email}, course={self.course})"
+        return f"User(id={self.id}, name={self.name}, email={self.email}, course={self.course}), avatar_seed={self.avatar_seed}"
 
 
 class ReportedUser(Base):
