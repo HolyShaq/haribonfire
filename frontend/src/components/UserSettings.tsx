@@ -2,6 +2,7 @@ import { User } from "@/common/interfaces";
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogTitle,
   DialogTrigger,
@@ -9,8 +10,10 @@ import {
 import HaribonAvatar from "./HaribonAvatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { generateAvatarSeed } from "@/lib/utils";
+import { updateUserInfo } from "@/lib/api";
 
 interface UserSettingsProps {
   user: User;
@@ -19,6 +22,7 @@ export default function UserSettings({ user }: UserSettingsProps) {
   const [name, setName] = useState(user.name);
   const [course, setCourse] = useState(user.course);
   const [avatarSeed, setAvatarSeed] = useState(user.avatar_seed);
+  const { toast } = useToast();
 
   const UserSection = () => (
     <div className="flex w-full items-center space-x-2 px-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
@@ -38,11 +42,19 @@ export default function UserSettings({ user }: UserSettingsProps) {
         <div className="flex flex-col w-full space-y-3">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-bold pl-3">Display Name</p>
-            <Input defaultValue={name} className="w-full" />
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full"
+            />
           </div>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-bold pl-3">Course</p>
-            <Input defaultValue={course} className="w-full" />
+            <Input
+              value={course}
+              onChange={(e) => setCourse(e.target.value)}
+              className="w-full"
+            />
           </div>
         </div>
         <div className="relative mt-3">
@@ -61,22 +73,30 @@ export default function UserSettings({ user }: UserSettingsProps) {
           />
         </div>
       </div>
-      <Button>Save Changes</Button>
+      <DialogClose asChild>
+        <Button
+          onClick={() => {
+            updateUserInfo(user.id, name, avatarSeed, course);
+            toast({
+              title: "Profile updated successfully!",
+              description: "",
+            });
+          }}
+        >
+          Save Changes
+        </Button>
+      </DialogClose>
     </div>
   );
 
   return (
-    <Dialog
-      onOpenChange={() => {
-        setName(user.name);
-        setCourse(user.course);
-        setAvatarSeed(user.avatar_seed);
-      }}
-    >
+    <Dialog>
       <DialogTrigger>
         <UserSection />
       </DialogTrigger>
-      <DialogContent className="w-[500px]">
+      <DialogContent
+        className="w-[500px]"
+      >
         <DialogTitle />
         <DialogSection />
       </DialogContent>
