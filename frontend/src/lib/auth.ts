@@ -1,6 +1,6 @@
 import { IDToken, User } from "@/common/interfaces";
 import { getCookie } from "cookies-next/client";
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
 import { redirect, RedirectType } from "next/navigation";
 import { randomName } from "./utils";
 
@@ -11,22 +11,23 @@ export function login() {
 }
 
 export function loggedInUser(): User | null {
-  const id_token = getCookie("id_token")
+  const id_token = getCookie("id_token");
   if (id_token) {
-    const payload = jwtDecode<IDToken>(id_token)
+    const payload = jwtDecode<IDToken>(id_token);
     return {
       id: payload.sub,
       name: payload.name,
       email: payload.email,
-    }
+      avatar_seed: payload.avatar_seed,
+    };
   } else {
-    return null
+    return null;
   }
 }
 
 export function fakelogin(id: string) {
   const name = randomName();
   const email = `${name}@haribonfire.com`;
-  const url = `${API_BASE_URL}auth/fakelogin?id=${id}&name=${name}&email=${email}`
+  const url = `${API_BASE_URL}auth/fakelogin?id=${id}&name=${name}&email=${email}`;
   redirect(url.replaceAll(" ", "%20"), RedirectType.push);
 }
