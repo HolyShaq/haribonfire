@@ -9,6 +9,7 @@ import PersonCard from "@/components/PersonCard";
 import RandomSVG from "@/components/RandomSVG";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import UserSettings from "@/components/UserSettings";
 import { loggedInUser } from "@/lib/auth";
 import { avatar, randomName } from "@/lib/utils";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
@@ -116,26 +117,7 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
           ))}
         </TabsContent>
       </Tabs>
-      <div className="flex w-full items-center justify-between rounded-md bg-stone-200 pr-2 dark:bg-stone-900">
-        <div className="flex w-full items-center space-x-2 px-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
-          <Avatar className="m-1 ml-0 h-12 w-12">
-            <AvatarImage src={avatar(user.name)} />
-            <AvatarFallback>Ac</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col items-start justify-center">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              Computer Science
-            </p>
-          </div>
-        </div>
-        <div className="flex">
-          <ModeToggle />
-          <div className="group mx-0 flex h-10 w-10 items-center justify-center rounded-md p-1 text-primary-foreground dark:text-primary transition-all hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground">
-            <Cog6ToothIcon className="h-6 w-6 transition-all motion-duration-2000 group-hover:motion-preset-spin" />
-          </div>
-        </div>
-      </div>
+      <UserSettings user={user} />
     </div>
   );
 }
