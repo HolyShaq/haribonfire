@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import HaribonAvatar from "./HaribonAvatar";
 
 interface UserSettingsProps {
   user: User;
@@ -18,15 +19,19 @@ interface UserSettingsProps {
 export default function UserSettings({ user }: UserSettingsProps) {
   const UserSection = () => (
     <div className="flex w-full items-center space-x-2 px-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
-      <Avatar className="m-1 ml-0 h-12 w-12">
-        <AvatarImage src={avatar(user.avatar_seed)} />
-        <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
-      </Avatar>
+      <HaribonAvatar user={user} />
       <div className="flex flex-col items-start justify-center">
         <p className="text-sm font-medium leading-none">{user.name}</p>
         <p className="text-xs leading-none text-muted-foreground">
           Computer Science
         </p>
+      </div>
+    </div>
+  );
+
+  const DialogSection = () => (
+    <div className="flex">
+      <div className="relative">
       </div>
     </div>
   );
@@ -38,11 +43,7 @@ export default function UserSettings({ user }: UserSettingsProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>Profile Settings</DialogTitle>
         </DialogHeader>
       </DialogContent>
     </Dialog>
