@@ -20,7 +20,7 @@ export default function UserSettings({ user }: UserSettingsProps) {
     <div className="flex w-full items-center space-x-2 px-2 rounded-md transition-all hover:bg-stone-300 dark:hover:bg-stone-800">
       <Avatar className="m-1 ml-0 h-12 w-12">
         <AvatarImage src={avatar(user.avatar_seed)} />
-        <AvatarFallback>Ac</AvatarFallback>
+        <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col items-start justify-center">
         <p className="text-sm font-medium leading-none">{user.name}</p>
