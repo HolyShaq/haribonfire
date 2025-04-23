@@ -21,7 +21,9 @@ export default function ChatLayout() {
     return redirect("/", RedirectType.replace);
   }
 
-  const [selectedContent, setSelectedContent] = useState<React.ReactNode>(<Home />);
+  const [selectedContent, setSelectedContent] = useState<React.ReactNode>(
+    <Home />,
+  );
 
   return (
     <div className="flex h-screen w-screen bg-zinc-100 dark:bg-zinc-900">
@@ -117,7 +119,15 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
           ))}
         </TabsContent>
       </Tabs>
-      <UserSettings user={user} />
+      <div className="flex w-full items-center justify-between rounded-md bg-stone-200 pr-2 dark:bg-stone-900">
+        <UserSettings user={user} />
+        <div className="flex">
+          <ModeToggle />
+          <div className="group mx-0 flex h-10 w-10 items-center justify-center rounded-md p-1 text-primary-foreground dark:text-primary transition-all hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground">
+            <Cog6ToothIcon className="h-6 w-6 transition-all motion-duration-2000 group-hover:motion-preset-spin" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
