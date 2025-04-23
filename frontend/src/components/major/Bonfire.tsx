@@ -39,6 +39,7 @@ export default function Bonfire() {
           const messageData = {
             user_id: user.id!,
             user_name: user.name,
+            avatar_seed: user.avatar_seed,
             text: chatInput,
             sent_at: new Date().toISOString(),
           };
