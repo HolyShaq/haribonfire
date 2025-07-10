@@ -92,31 +92,37 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
           className="mt-0 flex max-h-[62vh] flex-col space-y-1 overflow-y-scroll"
           value="friends"
         >
-          {[...Array(3).keys()].map((i) => (
-            <PersonCard
-              key={i}
-              name={`Person ${i}`}
-              avatar={`https://robohash.org/${i}?set=set4`}
-              course="Computer Science"
-              setSelectedContent={setSelectedContent}
-              i={i}
-            />
-          ))}
+          {[...Array(3).keys()].map((i) => {
+            const name = randomName();
+            return (
+              <PersonCard
+                key={i}
+                name={name}
+                avatar={avatar(name)}
+                course="Computer Science"
+                setSelectedContent={setSelectedContent}
+                i={i}
+              />
+            );
+          })}
         </TabsContent>
         <TabsContent
           className="mt-0 flex max-h-[62vh] flex-col space-y-1 overflow-y-scroll"
           value="recents"
         >
-          {[...Array(16).keys()].map((i) => (
-            <PersonCard
-              key={i}
-              name={`Person ${i}`}
-              avatar={avatar(i)}
-              course="Computer Science"
-              setSelectedContent={setSelectedContent}
-              i={i}
-            />
-          ))}
+          {[...Array(16).keys()].map((i) => {
+            const name = randomName();
+            return (
+              <PersonCard
+                key={i}
+                name={name}
+                avatar={avatar(name)}
+                course="Computer Science"
+                setSelectedContent={setSelectedContent}
+                i={i}
+              />
+            );
+          })}
         </TabsContent>
       </Tabs>
       <div className="flex w-full items-center justify-between rounded-md bg-stone-200 pr-2 dark:bg-stone-900">
