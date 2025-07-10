@@ -47,8 +47,6 @@ function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
         <div
           className="group flex items-center space-x-3 rounded-sm bg-stone-100 px-3 transition-all hover:bg-primary hover:p-2 hover:pl-14 dark:bg-neutral-800 dark:hover:bg-primary"
           onClick={() => {
-            const id = Math.floor(Math.random() * 100);
-            const name = randomName();
             setSelectedContent(<Bonfire />);
           }}
         >
