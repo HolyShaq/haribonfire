@@ -18,7 +18,7 @@ from database.controllers.users import create_user
 load_dotenv("./.env")
 STATE = "12345"
 NONCE = "6789"
-FRONTEND_URL = load_dotenv("FRONTEND_URL")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 
 async def get_jwks():
