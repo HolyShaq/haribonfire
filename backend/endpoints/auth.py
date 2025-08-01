@@ -122,8 +122,9 @@ async def login_callback(
     create_user(payload, session)
 
     # Construct response
-    response = RedirectResponse(
-        url=f"{FRONTEND_URL}/home?id_token={str(id_token)}", status_code=303
+    response = RedirectResponse(url=f"{FRONTEND_URL}/home", status_code=303)
+    response.set_cookie(
+        key="id_token", value=id_token, httponly=True, samesite="none", secure=True
     )
 
     return response
