@@ -79,7 +79,7 @@ def login():
     client_id = os.getenv("CLIENT_ID")
 
     # This points to /login/callback
-    redirect_uri = "http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fv1%2Fauth%2Flogin%2Fcallback"
+    redirect_uri = urllib.parse.quote("https://haribonfire.onrender.com/api/v1/auth/login/callback", safe="")
     params = {
         "client_id": client_id,
         "response_type": "id_token",
