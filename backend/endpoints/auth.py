@@ -20,6 +20,7 @@ STATE = "12345"
 NONCE = "6789"
 FRONTEND_URL = "http://localhost:3000"
 
+
 async def get_jwks():
     """
     Dependency for getting Microsoft's publick keys
@@ -61,6 +62,7 @@ async def decrypt_id_token(id_token: str) -> User:
         name=payload["name"],
         email=payload["email"],
     )
+
 
 def generate_avatar_seed():
     """
@@ -119,7 +121,9 @@ async def login_callback(
 
     # Construct response
     response = Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
-    response.set_cookie("id_token", str(id_token))
+    response.set_cookie(
+        key="id_token", value=str(id_token), httponly=True, samesite="none", secure=True
+    )
 
     return response
 
@@ -136,13 +140,17 @@ async def logout():
 
 @router.get("/logout/callback")
 async def logout_callback():
-    response = Response(status_code=status.HTTP_200_OK, content="Successfully logged out")
+    response = Response(
+        status_code=status.HTTP_200_OK, content="Successfully logged out"
+    )
     response.delete_cookie("id_token")
     return response
 
 
 @router.get("/fakelogin/")
-async def fake_login(id: str, name: str, email: str, session: Session = Depends(get_database_session)):
+async def fake_login(
+    id: str, name: str, email: str, session: Session = Depends(get_database_session)
+):
     response = RedirectResponse(url=f"{FRONTEND_URL}/home")
 
     user = session.query(User).filter_by(id=id).first()
@@ -154,33 +162,27 @@ async def fake_login(id: str, name: str, email: str, session: Session = Depends(
             "email": email,
             "avatar_seed": avatar_seed,
         }
-        create_user(User(id=id, name=name, email=email, avatar_seed=avatar_seed), session)
+        create_user(
+            User(id=id, name=name, email=email, avatar_seed=avatar_seed), session
+        )
     else:
         payload = {
             "sub": user.id,
             "name": user.name,
             "email": user.email,
-            "avatar_seed": user.avatar_seed
+            "avatar_seed": user.avatar_seed,
         }
 
     id_token = jwt.encode(payload, "test", algorithm="HS256")
-    response.set_cookie("id_token", id_token)
+    response.set_cookie(
+        key="id_token", value=id_token, httponly=True, samesite="none", secure=True
+    )
 
     return response
+
 
 @router.get("/fakelogout/")
 async def fake_logout():
     response = RedirectResponse(url=f"{FRONTEND_URL}")
     response.delete_cookie("id_token")
     return response
-
-
-
-
-
-
-
-
-
-
-
