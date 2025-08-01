@@ -15,7 +15,7 @@ from database.db import get_database_session
 from database.models.users import User
 from database.controllers.users import create_user
 
-load_dotenv("./../.env")
+load_dotenv("./.env")
 STATE = "12345"
 NONCE = "6789"
 FRONTEND_URL = "http://localhost:3000"
