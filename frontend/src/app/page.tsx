@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/lib/auth";
+import { fakelogin } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -15,12 +15,12 @@ export default function Home() {
         className="w-48 mt-4"
         value={id}
         onChange={(e) => setId(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && login()}
+        onKeyDown={(e) => e.key === "Enter" && fakelogin(id)}
         placeholder="ID"
       />
       <Button className="mt-4" variant="outline"
         onClick={() => {
-          login()
+          fakelogin(id)
         }}
       >
         Log in with Microsoft
