@@ -79,7 +79,9 @@ def login():
     client_id = os.getenv("CLIENT_ID")
 
     # This points to /login/callback
-    redirect_uri = urllib.parse.quote("https://haribonfire.onrender.com/api/v1/auth/login/callback", safe="")
+    redirect_uri = urllib.parse.quote(
+        "https://haribonfire.onrender.com/api/v1/auth/login/callback", safe=""
+    )
     params = {
         "client_id": client_id,
         "response_type": "id_token",
@@ -120,9 +122,8 @@ async def login_callback(
     create_user(payload, session)
 
     # Construct response
-    response = RedirectResponse(url=f"{FRONTEND_URL}/home", status_code=303)
-    response.set_cookie(
-        key="id_token", value=str(id_token), httponly=True, samesite="none", secure=True
+    response = RedirectResponse(
+        url=f"{FRONTEND_URL}/home?id_token={str(id_token)}", status_code=303
     )
 
     return response
