@@ -1,6 +1,6 @@
 "use client";
 
-import { fakelogin, login } from "@/lib/auth";
+import { fakelogin } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";

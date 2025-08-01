@@ -13,7 +13,7 @@ export default function MessageLog({ messages, endNotice }: MessageLogProps) {
   return (
     <div className="flex max-h-[92vh] pt-8 flex-col overflow-y-scroll items-start justify-start px-4">
       <div className="flex flex-col-reverse w-full">
-        {messages
+        {messages && messages
           .sort((a, b) => b.sent_at.localeCompare(a.sent_at))
           .map((message, index) => {
             let differentDay = false;

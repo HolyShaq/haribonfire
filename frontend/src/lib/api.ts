@@ -1,14 +1,13 @@
-import { Message, QueueRequest } from "@/common/interfaces";
+import { Message } from "@/common/interfaces";
 import axios from "axios";
 
-const API_BASE_URL = "localhost:8000/api/v1/";
-const HTTP_BASE_URL = `http://${API_BASE_URL}`;
-const WEBSOCKET_BASE_URL = `ws://${API_BASE_URL}`;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const WEBSOCKET_BASE_URL = API_BASE_URL!.replace(/^http/, "ws");
 
 // RESTs
 export async function getGlobalMessages() {
   try {
-    const response = await axios.get(HTTP_BASE_URL + "messages/global/");
+    const response = await axios.get(API_BASE_URL + "/messages/global/");
     return response.data.map((message: Message) => ({
       ...message,
       sent_at: new Date(message.sent_at + "Z").toISOString(), // Convert to local timezone
@@ -25,7 +24,7 @@ export async function updateUserInfo(
   new_course: string = "",
 ) {
   try {
-    await axios.post(HTTP_BASE_URL + `users/${id}/`, null, {
+    await axios.post(API_BASE_URL + `/users/${id}/`, null, {
       params: {
         name: new_name,
         avatar_seed: new_avatar_seed,
@@ -39,7 +38,7 @@ export async function updateUserInfo(
 
 // Websockets
 export function getGlobalWebsocket() {
-  const ws = new WebSocket(WEBSOCKET_BASE_URL + "ws/global/");
+  const ws = new WebSocket(WEBSOCKET_BASE_URL + "/ws/global/");
   ws.onerror = (event) => {
     console.log(event);
   };
@@ -51,7 +50,7 @@ export function getGlobalWebsocket() {
 
 export function getQueueWebsocket(user_id: string) {
   const ws = new WebSocket(
-    WEBSOCKET_BASE_URL + "ws/queue/" + `?user_id=${user_id}`,
+    WEBSOCKET_BASE_URL + "/ws/queue/" + `?user_id=${user_id}`,
   );
   ws.onerror = (event) => {
     console.log(event);
@@ -64,7 +63,7 @@ export function getQueueWebsocket(user_id: string) {
 
 export function getRandomChatWebsocket(chat_room_id: number) {
   const ws = new WebSocket(
-    WEBSOCKET_BASE_URL + "ws/random/" + `?chat_room_id=${chat_room_id}`,
+    WEBSOCKET_BASE_URL + "/ws/random/" + `?chat_room_id=${chat_room_id}`,
   );
   ws.onerror = (event) => {
     console.log(event);

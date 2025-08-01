@@ -4,10 +4,10 @@ import { jwtDecode } from "jwt-decode";
 import { redirect, RedirectType } from "next/navigation";
 import { randomName } from "./utils";
 
-const API_BASE_URL = `http://localhost:8000/api/v1/`;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export function login() {
-  redirect(`${API_BASE_URL}auth/login`, RedirectType.push);
+  redirect(`${API_BASE_URL}/auth/login`, RedirectType.push);
 }
 
 export function loggedInUser(): User | null {
@@ -15,7 +15,7 @@ export function loggedInUser(): User | null {
   if (id_token) {
     const payload = jwtDecode<IDToken>(id_token);
     return {
-      id: payload.sub,
+      id: payload.id,
       name: payload.name,
       email: payload.email,
       avatar_seed: payload.avatar_seed,
@@ -28,6 +28,6 @@ export function loggedInUser(): User | null {
 export function fakelogin(id: string) {
   const name = randomName();
   const email = `${name}@haribonfire.com`;
-  const url = `${API_BASE_URL}auth/fakelogin?id=${id}&name=${name}&email=${email}`;
+  const url = `${API_BASE_URL}/auth/fakelogin?id=${id}&name=${name}&email=${email}`;
   redirect(url.replaceAll(" ", "%20"), RedirectType.push);
 }

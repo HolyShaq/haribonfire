@@ -50,7 +50,7 @@ function StartPage({ setPageContent }: PageProps) {
           setPageContent(<MatchingPage setPageContent={setPageContent} />)
         }
       >
-        Let's go!
+        Let&apos;s go!
       </Button>
     </div>
   );
@@ -59,6 +59,8 @@ function StartPage({ setPageContent }: PageProps) {
 function MatchingPage({ setPageContent }: PageProps) {
   const ws = useRef<WebSocket>(null);
   const user = loggedInUser()!;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (ws.current == null) {
       ws.current = getQueueWebsocket(user.id!);
@@ -146,7 +148,7 @@ function ChattingPage({
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
       <div className="text-muted-foreground mb-[-15px] ml-4">
-        You've been matched with
+        You&apos;ve been matched with
         <span className="text-primary font-bold"> {partnerName}</span>. Say hi
         :)
       </div>

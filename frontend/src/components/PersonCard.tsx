@@ -1,4 +1,4 @@
-import Private from "@/components/major/Private"
+import Private from "@/components/major/Private";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface PersonCardProps {
@@ -22,12 +22,11 @@ export default function PersonCard({
       style={{
         animationDelay: `${i * 50}ms`,
       }}
-
-      onClick={
-        () => {
-          setSelectedContent && setSelectedContent(<Private id={i} />)
+      onClick={() => {
+        if (setSelectedContent) {
+          setSelectedContent(<Private id={i} />);
         }
-      }
+      }}
     >
       <div className="flex items-center space-x-1">
         <Avatar className="h-12 w-12">

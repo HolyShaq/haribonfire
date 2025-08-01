@@ -1,5 +1,4 @@
-import { avatar, cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { cn } from "@/lib/utils";
 import { Message as MessageInterface } from "@/common/interfaces";
 import HaribonAvatar from "./HaribonAvatar";
 
@@ -9,7 +8,6 @@ export interface MessageProps extends MessageInterface {
 
 // TODO: Replace with dynamic data
 export default function Message({
-  user_id,
   user_name,
   avatar_seed,
   text,

@@ -7,13 +7,14 @@ import { redirect, RedirectType } from "next/navigation";
 import { useState } from "react";
 
 export default function ChatLayout() {
+  const [selectedContent, setSelectedContent] = useState<React.ReactNode>(
+    <Home />,
+  );
+
   if (!loggedInUser()) {
     return redirect("/", RedirectType.replace);
   }
 
-  const [selectedContent, setSelectedContent] = useState<React.ReactNode>(
-    <Home />,
-  );
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-zinc-100 dark:bg-zinc-900">

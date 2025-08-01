@@ -19,13 +19,13 @@ export default function Bonfire() {
       ws.current = getGlobalWebsocket();
       ws.current.onmessage = (event) => {
         const data: Message = JSON.parse(event.data);
-        setMessages((prev) => [...prev, data]);
+        setMessages((prev = []) => [...prev, data]);
       }
     }
 
     // Fetch global messages
     getGlobalMessages().then((data) => {
-      setMessages(data);
+      setMessages(data ?? []);
     });
   }, []);
 
@@ -48,6 +48,7 @@ export default function Bonfire() {
           setMessages((prev) => [...prev, messageData]);
 
           // Broadcast message to websocket
+          console.log(messageData)
           ws.current?.send(JSON.stringify(messageData));
           setChatInput("");
         }}
