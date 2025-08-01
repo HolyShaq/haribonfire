@@ -120,7 +120,7 @@ async def login_callback(
     create_user(payload, session)
 
     # Construct response
-    response = Response(status_code=status.HTTP_200_OK, content=payload.__repr__())
+    response = RedirectResponse(url=f"{FRONTEND_URL}/home")
     response.set_cookie(
         key="id_token", value=str(id_token), httponly=True, samesite="none", secure=True
     )
