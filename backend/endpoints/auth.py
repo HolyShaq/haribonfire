@@ -79,6 +79,9 @@ def login():
     client_id = os.getenv("CLIENT_ID")
 
     # This points to /login/callback
+    # redirect_uri = urllib.parse.quote(
+    #     "http://localhost:8000/api/v1/auth/login/callback", safe=""
+    # )
     redirect_uri = urllib.parse.quote(
         "https://haribonfire.onrender.com/api/v1/auth/login/callback", safe=""
     )
@@ -121,11 +124,21 @@ async def login_callback(
     # Create user record
     create_user(payload, session)
 
+    # Reconstruct id_token with avatar_seed
+    id_token = jwt.encode(
+        {
+            "id": payload.id,
+            "name": payload.name,
+            "email": payload.email,
+            "avatar_seed": payload.avatar_seed,
+        },
+        "test",
+        algorithm="HS256",
+    )
+
     # Construct response
     response = RedirectResponse(url=f"{FRONTEND_URL}/home", status_code=303)
-    response.set_cookie(
-        key="id_token", value=id_token, httponly=True, samesite="none", secure=True
-    )
+    response.set_cookie(key="id_token", value=id_token, samesite="none", secure=True)
 
     return response
 
@@ -176,9 +189,7 @@ async def fake_login(
         }
 
     id_token = jwt.encode(payload, "test", algorithm="HS256")
-    response.set_cookie(
-        key="id_token", value=id_token, httponly=True, samesite="none", secure=True
-    )
+    response.set_cookie(key="id_token", value=id_token, samesite="none", secure=True)
 
     return response
 
