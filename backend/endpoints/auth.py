@@ -142,8 +142,7 @@ async def login_callback(
     )
 
     # Construct response
-    response = RedirectResponse(url=f"{FRONTEND_URL}/home", status_code=303)
-    response.set_cookie(key="id_token", value=id_token, samesite="none", secure=True)
+    response = RedirectResponse(url=f"{FRONTEND_URL}/home?id_token={id_token}", status_code=303)
 
     return response
 
@@ -171,8 +170,6 @@ async def logout_callback():
 async def fake_login(
     id: str, name: str, email: str, session: Session = Depends(get_database_session)
 ):
-    response = RedirectResponse(url=f"{FRONTEND_URL}/home")
-
     user = session.query(User).filter_by(id=id).first()
     if user is None:
         avatar_seed = generate_avatar_seed()
@@ -194,7 +191,7 @@ async def fake_login(
         }
 
     id_token = jwt.encode(payload, "test", algorithm="HS256")
-    response.set_cookie(key="id_token", value=id_token, samesite="none", secure=True)
+    response = RedirectResponse(url=f"{FRONTEND_URL}/home?id_token={id_token}", status_code=303)
 
     return response
 

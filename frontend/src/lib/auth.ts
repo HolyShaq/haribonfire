@@ -1,8 +1,9 @@
 import { IDToken, User } from "@/common/interfaces";
-import { getCookie } from "cookies-next/client";
+import { getCookie, setCookie } from "cookies-next/client";
 import { jwtDecode } from "jwt-decode";
-import { redirect, RedirectType } from "next/navigation";
+import { redirect, RedirectType, useRouter } from "next/navigation";
 import { randomName } from "./utils";
+import { useSearchParams } from "next/navigation";
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 const API_BASE_URL =
@@ -15,6 +16,14 @@ export function login() {
 }
 
 export function loggedInUser(): User | null {
+  // Check query params for id token
+  const searchParams = useSearchParams();
+  if (searchParams.has("id_token")) {
+    const id_token = searchParams.get("id_token");
+    setCookie("id_token", id_token!);
+  }
+
+  // Check cookie for id token
   const id_token = getCookie("id_token");
   if (id_token) {
     const payload = jwtDecode<IDToken>(id_token);
