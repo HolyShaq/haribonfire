@@ -4,7 +4,11 @@ import { jwtDecode } from "jwt-decode";
 import { redirect, RedirectType } from "next/navigation";
 import { randomName } from "./utils";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
+const API_BASE_URL =
+  ENVIRONMENT === "production"
+    ? process.env.NEXT_PUBLIC_API_BASE_URL
+    : "http://localhost:8000/api/v1";
 
 export function login() {
   redirect(`${API_BASE_URL}/auth/login`, RedirectType.push);

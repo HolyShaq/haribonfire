@@ -1,7 +1,11 @@
 import { Message } from "@/common/interfaces";
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
+const API_BASE_URL =
+  ENVIRONMENT === "production"
+    ? process.env.NEXT_PUBLIC_API_BASE_URL
+    : "http://localhost:8000/api/v1";
 const WEBSOCKET_BASE_URL = API_BASE_URL!.replace(/^http/, "ws");
 
 // RESTs

@@ -18,7 +18,11 @@ from database.controllers.users import create_user
 load_dotenv("./.env")
 STATE = "12345"
 NONCE = "6789"
-FRONTEND_URL = os.getenv("FRONTEND_URL")
+FRONTEND_URL = (
+    os.getenv("FRONTEND_URL")
+    if os.getenv("ENVIRONMENT") == "production"
+    else "http://localhost:3000"
+)
 
 
 async def get_jwks():
@@ -79,12 +83,13 @@ def login():
     client_id = os.getenv("CLIENT_ID")
 
     # This points to /login/callback
-    # redirect_uri = urllib.parse.quote(
-    #     "http://localhost:8000/api/v1/auth/login/callback", safe=""
-    # )
-    redirect_uri = urllib.parse.quote(
-        "https://haribonfire.onrender.com/api/v1/auth/login/callback", safe=""
+    callback_url = (
+        "https://haribonfire.onrender.com/api/v1/auth/login/callback"
+        if os.getenv("ENVIRONMENT") == "production"
+        else "http://localhost:8000/api/v1/auth/login/callback"
     )
+    redirect_uri = urllib.parse.quote(callback_url, safe="")
+
     params = {
         "client_id": client_id,
         "response_type": "id_token",
