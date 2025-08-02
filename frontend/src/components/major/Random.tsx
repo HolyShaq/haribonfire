@@ -115,6 +115,7 @@ function ChattingPage({
   partnerName,
 }: ChattingPageProps) {
   const user = loggedInUser()!;
+  const bottomRef = useRef<HTMLDivElement>(null);
   const ws = useRef<WebSocket>(null);
 
   const [chatInput, setChatInput] = useState("");
@@ -145,6 +146,11 @@ function ChattingPage({
     }
   }, []);
 
+  useEffect(() => {
+    // Scroll to bottom
+    bottomRef.current?.scrollIntoView();
+  }, [messages]);
+
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
       <div className="text-muted-foreground mb-[-15px] ml-4">
@@ -152,7 +158,7 @@ function ChattingPage({
         <span className="text-primary font-bold"> {partnerName}</span>. Say hi
         :)
       </div>
-      <MessageLog messages={messages} endNotice={endNotice} />
+      <MessageLog messages={messages} bottomRef={bottomRef} endNotice={endNotice} />
       <div className="flex flex-row space-x-2 w-full items-center">
         {(chatState == "chatting" || chatState == "confirmSkip") && (
           <Button

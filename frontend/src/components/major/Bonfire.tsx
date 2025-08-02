@@ -11,6 +11,7 @@ export default function Bonfire() {
   const user = loggedInUser()!;
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const ws = useRef<WebSocket>(null);
 
   useEffect(() => {
@@ -20,18 +21,21 @@ export default function Bonfire() {
       ws.current.onmessage = (event) => {
         const data: Message = JSON.parse(event.data);
         setMessages((prev = []) => [...prev, data]);
-      }
+      };
     }
 
     // Fetch global messages
     getGlobalMessages().then((data) => {
       setMessages(data ?? []);
+
+      // Scroll to bottom
+      bottomRef.current?.scrollIntoView();
     });
   }, []);
 
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
-      <MessageLog messages={messages} />
+      <MessageLog messages={messages} bottomRef={bottomRef} />
       <ChatInput
         chatInput={chatInput}
         setChatInput={setChatInput}
@@ -48,9 +52,15 @@ export default function Bonfire() {
           setMessages((prev) => [...prev, messageData]);
 
           // Broadcast message to websocket
-          console.log(messageData)
           ws.current?.send(JSON.stringify(messageData));
+
+          // Clear text input
           setChatInput("");
+
+          // Scroll to bottom
+          setTimeout(() => {
+            bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 0);
         }}
       />
     </div>
