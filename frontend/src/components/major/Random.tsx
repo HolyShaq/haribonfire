@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import MessageLog from "../MessageLog";
 import ChatInput from "../ChatInput";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export default function Random() {
   const [PageContent, setPageContent] = useState<React.ReactNode>();
@@ -58,9 +59,9 @@ function StartPage({ setPageContent }: PageProps) {
 
 function MatchingPage({ setPageContent }: PageProps) {
   const ws = useRef<WebSocket>(null);
-  const user = loggedInUser()!;
+  const searchParams = useSearchParams();
+  const user = loggedInUser(searchParams)!;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (ws.current == null) {
       ws.current = getQueueWebsocket(user.id!);
@@ -78,6 +79,7 @@ function MatchingPage({ setPageContent }: PageProps) {
         ws.current!.close();
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -114,7 +116,8 @@ function ChattingPage({
   chatRoomId,
   partnerName,
 }: ChattingPageProps) {
-  const user = loggedInUser()!;
+  const searchParams = useSearchParams();
+  const user = loggedInUser(searchParams)!;
   const bottomRef = useRef<HTMLDivElement>(null);
   const ws = useRef<WebSocket>(null);
 
@@ -144,12 +147,13 @@ function ChattingPage({
         }
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     // Scroll to bottom
     bottomRef.current?.scrollIntoView();
-  }, [messages]);
+  }, [messages, bottomRef]);
 
   return (
     <div className="ml-2 mr-4 mb-10 justify-end flex h-screen flex-grow flex-col">
@@ -158,7 +162,11 @@ function ChattingPage({
         <span className="text-primary font-bold"> {partnerName}</span>. Say hi
         :)
       </div>
-      <MessageLog messages={messages} bottomRef={bottomRef} endNotice={endNotice} />
+      <MessageLog
+        messages={messages}
+        bottomRef={bottomRef}
+        endNotice={endNotice}
+      />
       <div className="flex flex-row space-x-2 w-full items-center">
         {(chatState == "chatting" || chatState == "confirmSkip") && (
           <Button

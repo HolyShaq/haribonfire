@@ -9,13 +9,15 @@ import { Cog6ToothIcon } from "@heroicons/react/16/solid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserSettings from "@/components/UserSettings";
 import { loggedInUser } from "@/lib/auth";
+import { useSearchParams } from "next/navigation";
 
 interface SidebarProps {
   setSelectedContent: React.Dispatch<React.SetStateAction<React.ReactNode>>;
 }
 
 export default function Sidebar({ setSelectedContent }: Readonly<SidebarProps>) {
-  const user = loggedInUser()!;
+  const searchParams = useSearchParams();
+  const user = loggedInUser(searchParams)!;
   return (
     <div className="m-1 flex flex-col h-full space-y-2 w-fit rounded-sm bg-stone-200 p-1 dark:bg-stone-900">
       <div className="flex w-full flex-col justify-center space-y-1">

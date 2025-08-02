@@ -6,9 +6,11 @@ import MessageLog from "../MessageLog";
 import { getGlobalMessages, getGlobalWebsocket } from "@/lib/api";
 import { Message } from "@/common/interfaces";
 import { loggedInUser } from "@/lib/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function Bonfire() {
-  const user = loggedInUser()!;
+  const searchParams = useSearchParams();
+  const user = loggedInUser(searchParams)!;
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
