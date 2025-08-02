@@ -31,7 +31,9 @@ export default function Bonfire() {
       setMessages(data ?? []);
 
       // Scroll to bottom
-      bottomRef.current?.scrollIntoView();
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 0);
     });
   }, []);
 
