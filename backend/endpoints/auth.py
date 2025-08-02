@@ -174,7 +174,7 @@ async def fake_login(
     if user is None:
         avatar_seed = generate_avatar_seed()
         payload = {
-            "sub": id,
+            "id": id,
             "name": name,
             "email": email,
             "avatar_seed": avatar_seed,
@@ -184,7 +184,7 @@ async def fake_login(
         )
     else:
         payload = {
-            "sub": user.id,
+            "id": user.id,
             "name": user.name,
             "email": user.email,
             "avatar_seed": user.avatar_seed,
