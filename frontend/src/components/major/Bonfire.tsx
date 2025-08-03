@@ -32,7 +32,7 @@ export default function Bonfire() {
 
       // Scroll to bottom
       setTimeout(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        bottomRef.current?.scrollIntoView();
       }, 0);
     });
   }, []);
